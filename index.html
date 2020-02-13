@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+
+  </head>
+  <body>
+    <label for="initial-investment">Initial Investment: </label>
+    <input id="initial-investment" type="number" min="0" onchange="calculateResult()"></input><br/>
+    <label for="years">Years: </label>
+    <input id="years" type="number" min="1" onchange="calculateResult()"></input><br/>
+    <label for="interest-rate">Interest Rate: </label>
+    <input id="interest-rate" type="number" min="1" max="100" onchange="calculateResult()"></input>%<br/>
+    <br/>
+    
+    <label for="account-balance">Account Balance: </label>
+    <input id="account-balance" type="number" disabled="true"></input>
+  </body>
+
+</html>
+
+<script>
+  const calculateResult = () => {
+    let initialInvestment = document.getElementById("initial-investment").value
+    let years = document.getElementById("years").value
+    let interestRate = (document.getElementById("interest-rate").value / 100) + 1
+
+    if (initialInvestment < 0) {
+      document.getElementById("initial-investment").value = 0
+    }
+    if (years < 1) {
+      document.getElementById("years").value = 1
+    }
+    if (interestRate < 0) {
+      document.getElementById("interest-rate").value = 1
+    }
+
+    let result = Math.pow(interestRate, years) * initialInvestment
+    document.getElementById("account-balance").value = result
+  }
+</script>
