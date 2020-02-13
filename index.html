@@ -3,7 +3,15 @@
 <html>
   <head>
 
+    <!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+    <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script> -->
+    <script
+      src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+      integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8="
+      crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
   </head>
+
   <body>
     <label for="initial-investment">Initial Investment: </label>
     <input id="initial-investment" type="number" min="0" onchange="calculateResult()"></input><br/>
@@ -13,29 +21,108 @@
     <input id="interest-rate" type="number" min="1" max="100" onchange="calculateResult()"></input>%<br/>
     <br/>
     
-    <label for="account-balance">Account Balance: </label>
+    <label for="account-balance">Account Balance (Stale): </label>
     <input id="account-balance" type="number" disabled="true"></input>
+    
+    
+    <br/>
+    <br/>
+    Account Balance with yearly deposits of 100:<br/>
+    <table>
+      <tr>
+        <th>Year</th>
+        <th>Balance</th>
+      </tr>
+    </table>
+    <div style="height: 200px; overflow: scroll" id="container">
+      <table id="data-table">
+      </table>
+    </div>
+
+    <canvas id="myChart" width="400" height="400"></canvas>
   </body>
 
 </html>
 
 <script>
+  let lineChart
+
+  const roundTo = n => {
+    return Math.round((n + Number.EPSILON) * 10000) / 10000
+  }
+
+  let balanceOverTime = []
+
   const calculateResult = () => {
-    let initialInvestment = document.getElementById("initial-investment").value
-    let years = document.getElementById("years").value
-    let interestRate = (document.getElementById("interest-rate").value / 100) + 1
+    let initialInvestment = parseInt($('#initial-investment').val())
+    let years = $('#years').val()
+    let interestRate = ($('#interest-rate').val() / 100) + 1
 
     if (initialInvestment < 0) {
-      document.getElementById("initial-investment").value = 0
+      $('#initial-investment').val(0)
     }
-    if (years < 1) {
-      document.getElementById("years").value = 1
+    if (years < 0) {
+      $('#years').val(0)
     }
     if (interestRate < 0) {
-      document.getElementById("interest-rate").value = 1
+      $('#interest-rate').val(1)
     }
 
     let result = Math.pow(interestRate, years) * initialInvestment
-    document.getElementById("account-balance").value = result
+    $('#account-balance').val(roundTo(result))
+
+    let deposit = 100
+    let balance = interestRate * (initialInvestment + deposit)
+
+    let balanceOverTime = []
+    let labels = []
+    $('#data-table').empty().append(`<tr><td>${1}</td><td>${roundTo(balance)}</td></tr>`)
+    balanceOverTime.push(roundTo(balance))
+    for (let year = 1; year < years; year++) {
+      balance = (balance + deposit) * interestRate
+      balanceOverTime.push(roundTo(balance))
+      labels.push(year)
+      $('#data-table').append(`<tr><td>${year + 1}</td><td>${roundTo(balance)}</td></tr>`)
+    }
+
+    lineChart.data.labels = labels
+    lineChart.data.datasets[0].data = balanceOverTime
+    lineChart.update()
+
   }
+
+  // chart.js
+  $(document).ready(() => {
+    let ctx = $('#myChart')[0].getContext('2d')
+
+    let data = {
+      labels: [],
+      datasets: [{
+        label: 'Account Balance',
+        data: [],
+        backgroundColor: ['rgba(255, 99, 132, 0.2)'],
+        borderWidth: 1
+      }]
+    }
+
+    for (let i = 0; i < 100; i++) {
+      data.labels.push(i + 1)
+    }
+
+    let options = {
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
+          }
+        }]
+      }
+    }
+
+    lineChart = new Chart(ctx, {
+      type: 'line',
+      data: data,
+      options: options
+    })
+  })
 </script>
