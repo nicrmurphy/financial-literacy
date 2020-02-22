@@ -13,16 +13,18 @@
   </head>
 
   <body>
+    <div>
     <label for="initial-investment">Initial Investment: </label>
-    <input id="initial-investment" type="number" min="0" onchange="calculateResult()"></input><br/>
+    <input id="initial-investment" type="number" min="0" onchange="handleChange()"></input><br/>
     <label for="years">Years: </label>
-    <input id="years" type="number" min="1" onchange="calculateResult()"></input><br/>
+    <input id="years" type="number" min="1" onchange="handleChange()"></input><br/>
     <label for="interest-rate">Interest Rate: </label>
-    <input id="interest-rate" type="number" min="1" max="100" onchange="calculateResult()"></input>%<br/>
+    <input id="interest-rate" type="number" min="1" max="100" onchange="handleChange()"></input>%<br/>
     <br/>
     
     <label for="account-balance">Account Balance (Stale): </label>
     <input id="account-balance" type="number" disabled="true"></input>
+    </div>
     
     
     <br/>
@@ -53,13 +55,40 @@
 
   let balanceOverTime = []
 
-  const calculateResult = () => {
-    let initialInvestment = parseInt($('#initial-investment').val())
-    let years = $('#years').val()
-    let interestRate = ($('#interest-rate').val() / 100) + 1
+  // define min and max values
+  const minInitialInvestment = 0
+  const maxInitialInvestment = 1000000
+  const minYears = 0
+  const maxYears = 1000
+  const minInterestRate = 0
+  const maxInterestRate = 10000
 
-    if (initialInvestment < 0) {
-      $('#initial-investment').val(0)
+  // define input variables
+  let initialInvestment = 0
+  let years = 0
+  let interestRate = 0
+
+  /**
+   * Sets the variables to the most recent values from user input
+   */
+  const updateValues = () => {
+    initialInvestment = parseInt($('#initial-investment').val())
+    years = $('#years').val()
+    interestRate = ($('#interest-rate').val() / 100) + 1 // as a percentage
+  }
+
+  const snapNumber = (n, min, max) => {
+    return Math.min(Math.max(n, min), max)
+  }
+
+  /**
+   * Snap input field to defined min and max constants
+   */
+  const snapValues = () => {
+    if (initialInvestment < minInitialInvestment) {
+      $('#initial-investment').val(minInitialInvestment)
+    } else if (initialInvestment > maxInitialInvestment) {
+      $('#initial-investment').val(maxInitialInvestment)
     }
     if (years < 0) {
       $('#years').val(0)
@@ -67,6 +96,9 @@
     if (interestRate < 0) {
       $('#interest-rate').val(1)
     }
+  }
+
+  const calculateResult = () => {
 
     let result = Math.pow(interestRate, years) * initialInvestment
     $('#account-balance').val(roundTo(result))
@@ -89,6 +121,12 @@
     lineChart.data.datasets[0].data = balanceOverTime
     lineChart.update()
 
+  }
+
+  const handleChange = () => {
+    snapValues()
+    updateValues()
+    calculateResult()
   }
 
   // chart.js
