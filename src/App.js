@@ -3,7 +3,7 @@ import './App.css'
 
 function App() {
   return <div className="App">
-    Test git hook alert
+    Continuous Integration!
   </div>
 }
 
