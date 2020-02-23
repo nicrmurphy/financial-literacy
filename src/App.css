@@ -1,0 +1,13 @@
+.App {
+  text-align: center;
+  /* background-color: blue; */
+}
+
+html, body, #app, #app>div {
+  height: 100%
+}
+
+#blusgold-logo {
+  width: 100px;
+  height: auto;
+}
