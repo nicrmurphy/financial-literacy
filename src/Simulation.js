@@ -11,6 +11,7 @@ import {
   Grid
 } from '@material-ui/core'
 import logo from './logo.png'
+import ProjectTimestamp from './ProjectTimestamp'
 
 function Simulation() {
   const blusGoldLink = (
@@ -35,7 +36,8 @@ function Simulation() {
       <p>
         Welcome to the simulation! This app is in active development. For
         comments or inquiries, please contact {blusGoldLink}. The source code
-        for this app can be found {sourceCodeLink}.
+        for this app can be found {sourceCodeLink}. Most recent update was{' '}
+        <ProjectTimestamp />.
       </p>
       <img id="blusgold-logo" src={logo} alt="Blu$ Gold logo"></img>
       <br />
