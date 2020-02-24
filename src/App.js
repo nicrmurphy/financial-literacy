@@ -5,6 +5,8 @@ import Simulation from './Simulation'
 function App() {
   return (
     <div className="App">
+      <h1 style={{marginBottom: 0}}>The Game of Life</h1>
+      <h2 style={{marginTop: 0}}>Financial Simulation</h2>
       <Simulation />
       <p
         style={{
