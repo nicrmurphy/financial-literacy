@@ -8,25 +8,26 @@ import {
   ListItem,
   ListItemText,
   Checkbox,
-  Grid
+  Grid,
+  Link
 } from '@material-ui/core'
 import logo from './logo.png'
 import ProjectTimestamp from './ProjectTimestamp'
 
 function Simulation() {
   const blusGoldLink = (
-    <a href="https://blusgold.com/" target="_blank" rel="noopener noreferrer">
+    <Link href="https://blusgold.com/" target="_blank" rel="noopener noreferrer">
       Blu'$ Gold
-    </a>
+    </Link>
   )
 
   const sourceCodeLink = (
-    <a
+    <Link
       href="https://github.com/nicrmurphy/financial-literacy"
       target="_blank"
       rel="noopener noreferrer">
       here
-    </a>
+    </Link>
   )
 
   const [step, setStep] = useState(0)
