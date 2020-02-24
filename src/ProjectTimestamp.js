@@ -2,7 +2,8 @@ import React, { Fragment } from 'react'
 import timestamp from './most-recent-commit.js'
 
 const getTimestamp = () => {
-  return timestamp
+  let d = new Date(timestamp)
+  return d.toLocaleString()
 }
 
 function ProjectTimestamp() {

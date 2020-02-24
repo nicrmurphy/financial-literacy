@@ -1,2 +1,2 @@
-const timestamp = "Mon Feb 24 2020 11:15:35 GMT-0600 (Central Standard Time)"
+const timestamp = "2020-02-24 11:21:38 -0600"
 export default timestamp

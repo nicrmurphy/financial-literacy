@@ -13,6 +13,6 @@ const getTimestamp = () => {
   return timestamp
 }
 
-fs.writeFileSync('src/most-recent-commit.js', `const timestamp = "${(Date(getTimestamp())).toLocalString('en-US', {timeZone: 'America/Chicago'})}"
+fs.writeFileSync('src/most-recent-commit.js', `const timestamp = "${getTimestamp()}"
 export default timestamp`)
 console.log('Timestamp updated')
