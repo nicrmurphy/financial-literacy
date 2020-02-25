@@ -8,48 +8,17 @@ import {
   ListItem,
   ListItemText,
   Checkbox,
-  Grid,
-  Link
+  Grid
 } from '@material-ui/core'
-import logo from './logo.png'
-import ProjectTimestamp from './ProjectTimestamp'
+import Welcome from './pages/Welcome'
 
 function Simulation() {
-  const blusGoldLink = (
-    <Link href="https://blusgold.com/" target="_blank" rel="noopener noreferrer">
-      Blu'$ Gold
-    </Link>
-  )
-
-  const sourceCodeLink = (
-    <Link
-      href="https://github.com/nicrmurphy/financial-literacy"
-      target="_blank"
-      rel="noopener noreferrer">
-      here
-    </Link>
-  )
-
   const [step, setStep] = useState(0)
 
+  let welcomePage = <Welcome nextPage={() => setStep(step + 1)} />
+
   const steps = [
-    <Box>
-      <p>
-        Welcome to the simulation! This app is in active development. For
-        comments or inquiries, please contact {blusGoldLink}. The source code
-        for this app can be found {sourceCodeLink}. Most recent update was{' '}
-        <ProjectTimestamp />.
-      </p>
-      <img id="blusgold-logo" src={logo} alt="Blu$ Gold logo"></img>
-      <br />
-      <Button
-        variant="contained"
-        color="primary"
-        style={{ marginTop: '75px' }}
-        onClick={() => setStep(step + 1)}>
-        Begin!
-      </Button>
-    </Box>,
+    welcomePage,
     <Box>
       <h3 style={{ marginBottom: 0 }}>Make a choice:</h3>
       <List>
@@ -70,12 +39,33 @@ function Simulation() {
   ]
 
   return (
-    <Container maxWidth="sm" /*style={{backgroundColor: "white"}}*/>
-      <Box>{steps[step] ? steps[step] : `Step ${step}`}</Box>
-      {step !== 0 && (
-        <div id="button-navigation">
-          <Grid container spacing={3}>
-            <Grid item xs={6}>
+    <Container maxWidth="sm" style={{minHeight: '75%'}}>
+      <Grid
+        container
+        direction="column"
+        justify="space-between"
+        alignItems="center"
+        style={{minHeight: '400px'}}>
+        <Grid
+          id="simulation-window"
+          item
+          container
+          xs={12}
+          direction="column"
+          justify="flex-start"
+          alignItems="stretch">
+          <Grid item>{steps[step] ? steps[step] : `Step ${step}`}</Grid>
+        </Grid>
+        {step !== 0 && (
+          <Grid
+            id="button-nav"
+            item
+            container
+            xs={10}
+            direction="row"
+            justify="space-between"
+            alignItems="center">
+            <Grid item>
               <Button
                 variant="contained"
                 color="default"
@@ -83,17 +73,18 @@ function Simulation() {
                 Back
               </Button>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item>
               <Button
                 variant="contained"
                 color="primary"
-                onClick={() => setStep(step + 1)}>
+                onClick={() => setStep(step + 1)}
+                disabled={false}>
                 Next
               </Button>
             </Grid>
           </Grid>
-        </div>
-      )}
+        )}
+      </Grid>
     </Container>
   )
 }
