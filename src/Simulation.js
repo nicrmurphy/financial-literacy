@@ -2,15 +2,35 @@ import React, { useState } from 'react'
 import './App.css'
 import { Container, Button, Grid } from '@material-ui/core'
 import Welcome from './pages/Welcome'
-import Salary from './pages/Salary'
+import RadioSelector from './pages/RadioSelector'
 
 function Simulation() {
-  const [step, setStep] = useState(0)
+  const [page, setPage] = useState(0)
+  const salaryOptions = [
+    { value: 1, label: '$1.00' },
+    { value: 2, label: '$2.00' },
+    { value: 3, label: '$3.00' }
+  ]
+  const loanOptions = [
+    { value: 10, label: '10 years' },
+    { value: 15, label: '15 years' },
+    { value: 20, label: '20 years' }
+  ]
 
-  let welcomePage = <Welcome nextPage={() => setStep(step + 1)} />
-  let salaryPage = <Salary />
+  const welcomePage = <Welcome nextPage={() => setPage(page + 1)} />
+  const salaryPage = <RadioSelector name={'Salary'} options={salaryOptions} complete={() => completePage(1)} />
+  const loanPage = <RadioSelector name={'Loan'} options={loanOptions} complete={() => completePage(2)} />
 
-  const steps = [welcomePage, salaryPage]
+  const [pages, setPages] = useState([
+    { component: welcomePage, complete: true },
+    { component: salaryPage, complete: false },
+    { component: loanPage, complete: false }
+  ])
+
+  const completePage = page => {
+    pages[page].complete = true
+    setPages([...pages]) // spread required so react knows to render
+  }
 
   return (
     <Container maxWidth="sm" style={{ minHeight: '75%' }}>
@@ -28,9 +48,11 @@ function Simulation() {
           direction="column"
           justify="flex-start"
           alignItems="stretch">
-          <Grid item>{steps[step] ? steps[step] : `Step ${step}`}</Grid>
+          <Grid item>
+            {pages[page] ? pages[page].component : `Step ${page}`}
+          </Grid>
         </Grid>
-        {step !== 0 && (
+        {page !== 0 && (
           <Grid
             id="button-nav"
             item
@@ -43,7 +65,7 @@ function Simulation() {
               <Button
                 variant="contained"
                 color="default"
-                onClick={() => setStep(step - 1)}>
+                onClick={() => setPage(page - 1)}>
                 Back
               </Button>
             </Grid>
@@ -51,8 +73,8 @@ function Simulation() {
               <Button
                 variant="contained"
                 color="primary"
-                onClick={() => setStep(step + 1)}
-                disabled={false}>
+                onClick={() => setPage(page + 1)}
+                disabled={pages[page] ? !pages[page].complete : !pages[page+1]}>
                 Next
               </Button>
             </Grid>
