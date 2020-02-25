@@ -3,28 +3,23 @@ import './App.css'
 import { Container, Button, Grid } from '@material-ui/core'
 import Welcome from './pages/Welcome'
 import RadioSelector from './pages/RadioSelector'
+import { salaryOptions, loanOptions, carOptions, apartmentOptions } from './constants.js'
 
 function Simulation() {
   const [page, setPage] = useState(0)
-  const salaryOptions = [
-    { value: 1, label: '$1.00' },
-    { value: 2, label: '$2.00' },
-    { value: 3, label: '$3.00' }
-  ]
-  const loanOptions = [
-    { value: 10, label: '10 years' },
-    { value: 15, label: '15 years' },
-    { value: 20, label: '20 years' }
-  ]
 
   const welcomePage = <Welcome nextPage={() => setPage(page + 1)} />
   const salaryPage = <RadioSelector name={'Salary'} options={salaryOptions} complete={() => completePage(1)} />
-  const loanPage = <RadioSelector name={'Loan'} options={loanOptions} complete={() => completePage(2)} />
+  const loanPage = <RadioSelector name={'Student Loan'} options={loanOptions} complete={() => completePage(2)} />
+  const carPage = <RadioSelector name={'Car'} options={carOptions} complete={() => completePage(3)} />
+  const apartmentPage = <RadioSelector name={'Apartment'} options={apartmentOptions} complete={() => completePage(4)} />
 
   const [pages, setPages] = useState([
     { component: welcomePage, complete: true },
     { component: salaryPage, complete: false },
-    { component: loanPage, complete: false }
+    { component: loanPage, complete: false },
+    { component: carPage, complete: false },
+    { component: apartmentPage, complete: false }
   ])
 
   const completePage = page => {
@@ -65,7 +60,8 @@ function Simulation() {
               <Button
                 variant="contained"
                 color="default"
-                onClick={() => setPage(page - 1)}>
+                onClick={() => setPage(page - 1)}
+                disabled={false}>
                 Back
               </Button>
             </Grid>
