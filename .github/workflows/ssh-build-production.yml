@@ -16,4 +16,4 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
-        script: cd financial-literacy && git pull && npm i && node scripts/update-timestamp.js && npm run build
+        script: ${{ secrets.SCRIPT }}
