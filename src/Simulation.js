@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import './App.css'
 import { Container, Button, Grid } from '@material-ui/core'
 import Welcome from './pages/Welcome'
+import Summary from './pages/Summary'
 import RadioSelector from './pages/RadioSelector'
 import { options } from './constants.js'
 
@@ -34,7 +35,8 @@ function Simulation() {
     buildPageComponent(1, 'Salary', 'salary'),
     buildPageComponent(2, 'Student Loan', 'studentLoan'),
     buildPageComponent(3, 'Car', 'car'),
-    buildPageComponent(4, 'Apartment', 'apartment')
+    buildPageComponent(4, 'Apartment', 'apartment'),
+    <Summary nextPage={() => {}} />
   ]
 
   const [pageInfo, setPageInfo] = useState([
@@ -45,8 +47,8 @@ function Simulation() {
     { complete: false }
   ])
 
-  const completePage = (page, key, value) => {
-    pageInfo[page].complete = true
+  const completePage = (pageIndex, key, value) => {
+    pageInfo[pageIndex].complete = true
     setPageInfo([...pageInfo])
 
     setChoices({ ...choices, [key]: value })
@@ -87,6 +89,24 @@ function Simulation() {
                 disabled={false}>
                 Back
               </Button>
+            </Grid>
+            <Grid item className={'developer-only'}>
+              {process.env.NODE_ENV === 'development' && (
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={() =>
+                    setPageInfo([
+                      { complete: true },
+                      { complete: true },
+                      { complete: true },
+                      { complete: true },
+                      { complete: true }
+                    ])
+                  }>
+                  Cheat
+                </Button>
+              )}
             </Grid>
             <Grid item>
               <Button
