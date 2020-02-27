@@ -9,10 +9,11 @@ import {
 } from '@material-ui/core'
 
 function RadioSelector(props) {
-  const [value, setValue] = useState(null)
+  const [value, setValue] = useState(props.selected)
+  console.log('received props: ', props.selected)
   const handleChange = e => {
     setValue(parseInt(e.target.value))
-    props.complete()
+    props.complete(parseInt(e.target.value))
   }
 
   return (
@@ -33,7 +34,7 @@ function RadioSelector(props) {
               value={option.value}
               control={<Radio color="primary" />}
               label={option.label}
-              checked={value === option.value}
+              checked={option.value === props.selected}
             />
           ))}
         </RadioGroup>

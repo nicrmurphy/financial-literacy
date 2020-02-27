@@ -7,24 +7,34 @@ import { salaryOptions, loanOptions, carOptions, apartmentOptions } from './cons
 
 function Simulation() {
   const [page, setPage] = useState(0)
+  const [choices, setChoices] = useState({
+    salary: 0,
+    studentLoan: 0,
+    car: 0,
+    apartment: 0
+  })
 
-  const welcomePage = <Welcome nextPage={() => setPage(page + 1)} />
-  const salaryPage = <RadioSelector name={'Salary'} options={salaryOptions} complete={() => completePage(1)} />
-  const loanPage = <RadioSelector name={'Student Loan'} options={loanOptions} complete={() => completePage(2)} />
-  const carPage = <RadioSelector name={'Car'} options={carOptions} complete={() => completePage(3)} />
-  const apartmentPage = <RadioSelector name={'Apartment'} options={apartmentOptions} complete={() => completePage(4)} />
+  const pages = [
+    <Welcome nextPage={() => setPage(page + 1)} />,
+    <RadioSelector name={'Salary'} options={salaryOptions} selected={choices['salary']} complete={result => completePage(1, 'salary', result)} />,
+    <RadioSelector name={'Student Loan'} options={loanOptions} selected={choices['studentLoan']} complete={result => completePage(2, 'studentLoan', result)} />,
+    <RadioSelector name={'Car'} options={carOptions} selected={choices['car']} complete={result => completePage(3, 'car', result)} />,
+    <RadioSelector name={'Apartment'} options={apartmentOptions} selected={choices['apartment']} complete={result => completePage(4, 'apartment', result)} />
+  ]
 
-  const [pages, setPages] = useState([
-    { component: welcomePage, complete: true },
-    { component: salaryPage, complete: false },
-    { component: loanPage, complete: false },
-    { component: carPage, complete: false },
-    { component: apartmentPage, complete: false }
+  const [pageInfo, setPageInfo] = useState([
+    { complete: true },
+    { complete: false },
+    { complete: false },
+    { complete: false },
+    { complete: false }
   ])
 
-  const completePage = page => {
-    pages[page].complete = true
-    setPages([...pages]) // spread required so react knows to render
+  const completePage = (page, key, value) => {
+    pageInfo[page].complete = true
+    setPageInfo([ ...pageInfo ])
+
+    setChoices({ ...choices, [key]: value })
   }
 
   return (
@@ -44,7 +54,7 @@ function Simulation() {
           justify="flex-start"
           alignItems="stretch">
           <Grid item>
-            {pages[page] ? pages[page].component : `Step ${page}`}
+            {pages[page] ? pages[page] : `Step ${page}`}
           </Grid>
         </Grid>
         {page !== 0 && (
@@ -70,7 +80,7 @@ function Simulation() {
                 variant="contained"
                 color="primary"
                 onClick={() => setPage(page + 1)}
-                disabled={pages[page] ? !pages[page].complete : !pages[page+1]}>
+                disabled={pageInfo[page] ? !pageInfo[page].complete : !pageInfo[page+1]}>
                 Next
               </Button>
             </Grid>
