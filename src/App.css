@@ -3,11 +3,6 @@
   /* background-color: blue; */
 }
 
-
-html, body, #root, .App {
-  height: 100%
-}
-
 #blusgold-logo {
   width: 100px;
   height: auto;
