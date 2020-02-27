@@ -3,7 +3,7 @@ import './App.css'
 import { Container, Button, Grid } from '@material-ui/core'
 import Welcome from './pages/Welcome'
 import RadioSelector from './pages/RadioSelector'
-import { salaryOptions, loanOptions, carOptions, apartmentOptions } from './constants.js'
+import { options } from './constants.js'
 
 function Simulation() {
   const [page, setPage] = useState(0)
@@ -14,12 +14,27 @@ function Simulation() {
     apartment: 0
   })
 
+  /**
+   * Returns a RadioSelector component for dynamic page creation.
+   * @param {int} pageIndex
+   * @param {String} label
+   * @param {String} key
+   */
+  const buildPageComponent = (pageIndex, label, key) => (
+    <RadioSelector
+      name={label}
+      options={options[key]}
+      selected={choices[key]}
+      complete={result => completePage(pageIndex, key, result)}
+    />
+  )
+
   const pages = [
     <Welcome nextPage={() => setPage(page + 1)} />,
-    <RadioSelector name={'Salary'} options={salaryOptions} selected={choices['salary']} complete={result => completePage(1, 'salary', result)} />,
-    <RadioSelector name={'Student Loan'} options={loanOptions} selected={choices['studentLoan']} complete={result => completePage(2, 'studentLoan', result)} />,
-    <RadioSelector name={'Car'} options={carOptions} selected={choices['car']} complete={result => completePage(3, 'car', result)} />,
-    <RadioSelector name={'Apartment'} options={apartmentOptions} selected={choices['apartment']} complete={result => completePage(4, 'apartment', result)} />
+    buildPageComponent(1, 'Salary', 'salary'),
+    buildPageComponent(2, 'Student Loan', 'studentLoan'),
+    buildPageComponent(3, 'Car', 'car'),
+    buildPageComponent(4, 'Apartment', 'apartment')
   ]
 
   const [pageInfo, setPageInfo] = useState([
@@ -32,7 +47,7 @@ function Simulation() {
 
   const completePage = (page, key, value) => {
     pageInfo[page].complete = true
-    setPageInfo([ ...pageInfo ])
+    setPageInfo([...pageInfo])
 
     setChoices({ ...choices, [key]: value })
   }
@@ -53,9 +68,7 @@ function Simulation() {
           direction="column"
           justify="flex-start"
           alignItems="stretch">
-          <Grid item>
-            {pages[page] ? pages[page] : `Step ${page}`}
-          </Grid>
+          <Grid item>{pages[page] ? pages[page] : `Step ${page}`}</Grid>
         </Grid>
         {page !== 0 && (
           <Grid
@@ -80,7 +93,11 @@ function Simulation() {
                 variant="contained"
                 color="primary"
                 onClick={() => setPage(page + 1)}
-                disabled={pageInfo[page] ? !pageInfo[page].complete : !pageInfo[page+1]}>
+                disabled={
+                  pageInfo[page]
+                    ? !pageInfo[page].complete
+                    : !pageInfo[page + 1]
+                }>
                 Next
               </Button>
             </Grid>

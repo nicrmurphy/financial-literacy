@@ -10,7 +10,7 @@ import {
 
 function RadioSelector(props) {
   const [value, setValue] = useState(props.selected)
-  console.log('received props: ', props.selected)
+  
   const handleChange = e => {
     setValue(parseInt(e.target.value))
     props.complete(parseInt(e.target.value))
