@@ -1,38 +1,72 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Grid, Typography, Box, Slide } from '@material-ui/core'
 import { Doughnut, Line } from 'react-chartjs-2'
+import { getStudentLoanAnnual } from '../constants'
+import { toCurrency } from '../tools'
 
 /**
  * This is the page that is displayed at key times throughout the
  * simulation to assess and inform the player of their progress.
  */
-function Summary() {
-  const [sliders, setSliders] = useState([
-    false,
-    false,
-    false,
-    false,
-    false,
-    false
-  ])
+function Summary(props) {
+  const [sliders, setSliders] = useState([ false, false, false, false, false, false, false])
   const [sliderIndex, setSliderIndex] = useState(0)
+  const [accountBalance, setAccountBalance] = useState(0)
+  const [debt, setDebt] = useState(0)
+  const [investments, setInvestments] = useState(0)
+
+  /* chart data */
+  const [totals, setTotals] = useState([])
+
+  const intervalContainer = useRef(null)
 
   useEffect(() => {
-    const interval = setInterval(() => {
+    intervalContainer.current = setInterval(() => {
       setSliderIndex(sliderIndex => sliderIndex + 1)
-    }, 200) // TODO: decide on slow or fast delay for ripple effect
+    }, 200)
+
+    calculateSummary()
 
     return () => {
-      clearInterval(interval) // TODO: clear interval after sliderIndex === nSliders
+      clearInterval(intervalContainer.current)
     }
+    // eslint-disable-next-line
   }, [])
-  // TODO: maybe get ride of setTimeout altogether - MUI might have a delay prop
+
+  const calculateSummary = () => {
+    const { salary, studentLoan, apartment, car } = props.choices
+    
+    /* calculations for one year */
+    // calculate net income
+    const taxRate = .75       // income tax, property tax, etc
+    const miscCostRate = .7   // miscellaneous costs and purchases
+    const netIncome = salary * taxRate * miscCostRate
+
+    // calculate total expenses
+    const retirementContributionPercent = .1 // 10% of salary
+    const retirementContribution = salary * retirementContributionPercent
+    const studentLoanAnnual = getStudentLoanAnnual(studentLoan)
+    const apartmentAnnual = apartment * 12
+    const totalExpenses = retirementContribution + studentLoanAnnual + apartmentAnnual + car
+    
+    setAccountBalance(Math.max(netIncome - totalExpenses, 0))
+    setDebt(Math.max(totalExpenses - netIncome, 0))
+    setInvestments(retirementContribution)
+  }
+
   useEffect(() => {
     let sl = [...sliders]
     sl[sliderIndex] = true
     setSliders(sl)
+
+    // clear the recurring interval at end of array
+    if (sliderIndex === sliders.length) {
+      clearInterval(intervalContainer.current)
+    }
     // eslint-disable-next-line
   }, [sliderIndex])
+
+  useEffect(() => setTotals([accountBalance, debt, investments]), [accountBalance, debt, investments])
 
   return (
     <Grid
@@ -42,7 +76,7 @@ function Summary() {
       alignItems="flex-start">
       <Grid item>
         <Slide direction="right" in={sliders[0]} mountOnEnter unmountOnExit>
-          <Typography variant="h3">Summary:</Typography>
+          <Typography variant="h4">Summary:</Typography>
         </Slide>
       </Grid>
       <Grid
@@ -53,19 +87,26 @@ function Summary() {
         alignItems="flex-start">
         <Grid item>
           <Slide direction="right" in={sliders[1]} mountOnEnter unmountOnExit>
-            <Typography variant="h5" className="summary-page-text">
-              Account Balance: $30
+            <Typography variant="h6" className="summary-page-text">
+              Account Balance: {toCurrency(accountBalance)}
             </Typography>
           </Slide>
         </Grid>
         <Grid item>
           <Slide direction="right" in={sliders[2]} mountOnEnter unmountOnExit>
-            <Typography variant="h5">Debt: $400</Typography>
+            <Typography variant="h6" >Debt: {toCurrency(debt)}</Typography>
           </Slide>
         </Grid>
         <Grid item>
           <Slide direction="right" in={sliders[3]} mountOnEnter unmountOnExit>
-            <Typography variant="h5">401(k): $85</Typography>
+            <Typography variant="h6" >401(k): {toCurrency(investments)}</Typography>
+          </Slide>
+        </Grid>
+        <Grid item>
+          <Slide direction="right" in={sliders[4]} mountOnEnter unmountOnExit>
+            <Typography variant="h6" className="summary-page-text">
+            <Box fontWeight="fontWeightBold">Net Worth: {toCurrency(accountBalance + investments - debt)}</Box>
+            </Typography>
           </Slide>
         </Grid>
       </Grid>
@@ -75,7 +116,7 @@ function Summary() {
         direction="column"
         justify="space-between"
         alignItems="center">
-        {sliders[4] && (
+        {sliders[5] && (
           <Box
             style={{ padding: '14x', marginTop: '10px', marginBottom: '50px' }}>
             <Doughnut
@@ -83,8 +124,8 @@ function Summary() {
                 labels: ['Account Balance', 'Debt', '401(k)'],
                 datasets: [
                   {
-                    label: 'Account Balance',
-                    data: [30, 400, 85],
+                    label: 'Totals',
+                    data: totals,
                     backgroundColor: [
                       'rgba(99, 185, 255, 0.2)',
                       'rgba(255, 99, 132, 0.2)',
@@ -97,7 +138,7 @@ function Summary() {
             />
           </Box>
         )}
-        {sliders[5] && (
+        {sliders[6] && (
           <Box
             style={{
               width: Math.max(window.innerWidth, window.innerHeight) / 2,
@@ -111,51 +152,19 @@ function Summary() {
                 datasets: [
                   {
                     label: 'Account Balance',
-                    data: [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 68, 39, 30],
+                    data: [],
                     backgroundColor: ['rgba(99, 185, 255, 0.2)'],
                     borderWidth: 1
                   },
                   {
                     label: 'Debt',
-                    data: [
-                      0,
-                      4,
-                      8,
-                      14,
-                      16,
-                      68,
-                      94,
-                      110,
-                      160,
-                      197,
-                      244,
-                      260,
-                      333,
-                      389,
-                      400
-                    ],
+                    data: [],
                     backgroundColor: ['rgba(255, 99, 132, 0.2)'],
                     borderWidth: 1
                   },
                   {
                     label: '401(k)',
-                    data: [
-                      0,
-                      15,
-                      20,
-                      26,
-                      30,
-                      33,
-                      37,
-                      40,
-                      45,
-                      47,
-                      55,
-                      68,
-                      72,
-                      63,
-                      85
-                    ],
+                    data: [],
                     backgroundColor: ['rgba(112, 255, 99, 0.2)'],
                     borderWidth: 1
                   }

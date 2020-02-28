@@ -36,15 +36,17 @@ function Simulation() {
     buildPageComponent(2, 'Student Loan', 'studentLoan'),
     buildPageComponent(3, 'Car', 'car'),
     buildPageComponent(4, 'Apartment', 'apartment'),
-    <Summary nextPage={() => {}} />
+    <Summary choices={{ ...choices }} />,
   ]
 
+  // TODO: better method for disable next button
   const [pageInfo, setPageInfo] = useState([
-    { complete: true },
+    { complete: true }, // welcome page
     { complete: false },
     { complete: false },
     { complete: false },
-    { complete: false }
+    { complete: false },
+    { complete: true } // summary page
   ])
 
   const completePage = (pageIndex, key, value) => {
@@ -97,6 +99,7 @@ function Simulation() {
                   color="secondary"
                   onClick={() =>
                     setPageInfo([
+                      { complete: true },
                       { complete: true },
                       { complete: true },
                       { complete: true },
