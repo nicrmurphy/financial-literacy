@@ -1,72 +1,56 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Grid, Typography, Box, Slide } from '@material-ui/core'
 import { Doughnut, Line } from 'react-chartjs-2'
-import { getStudentLoanAnnual } from '../constants'
 import { toCurrency } from '../tools'
+import { calculateSummary } from '../formulas'
 
 /**
  * This is the page that is displayed at key times throughout the
  * simulation to assess and inform the player of their progress.
  */
-function Summary(props) {
-  const [sliders, setSliders] = useState([ false, false, false, false, false, false, false])
-  const [sliderIndex, setSliderIndex] = useState(0)
+function Summary({ choices }) {
+  const [sliders, setSliders] = useState([])
   const [accountBalance, setAccountBalance] = useState(0)
   const [debt, setDebt] = useState(0)
   const [investments, setInvestments] = useState(0)
 
+  /**
+   * indices of the following arrays = year; values are running totals
+   * values[0] = 0; values[1] = val(year1) + values[0];
+   * values[2] = val(year2) + values[1] + values[0];
+   * values[15] = val(year15) + values[14] + values[13] + ... + values[0];
+   */
+  const [accountBalanceOverTime, setAccountBalanceOverTime] = useState([])
+
   /* chart data */
   const [totals, setTotals] = useState([])
 
-  const intervalContainer = useRef(null)
-
+  // delay element transitions for ripple effect using setInterval()
   useEffect(() => {
-    intervalContainer.current = setInterval(() => {
-      setSliderIndex(sliderIndex => sliderIndex + 1)
+    const nTimes = 7 // number of elements sliding in
+    const interval = setInterval(() => {
+      if (sliders.length === nTimes) clearInterval(interval)
+      setSliders([...sliders, true])
     }, 200)
 
-    calculateSummary()
-
     return () => {
-      clearInterval(intervalContainer.current)
+      clearInterval(interval)
     }
-    // eslint-disable-next-line
-  }, [])
+  }, [sliders])
 
-  const calculateSummary = () => {
-    const { salary, studentLoan, apartment, car } = props.choices
-    
-    /* calculations for one year */
-    // calculate net income
-    const taxRate = .75       // income tax, property tax, etc
-    const miscCostRate = .7   // miscellaneous costs and purchases
-    const netIncome = salary * taxRate * miscCostRate
-
-    // calculate total expenses
-    const retirementContributionPercent = .1 // 10% of salary
-    const retirementContribution = salary * retirementContributionPercent
-    const studentLoanAnnual = getStudentLoanAnnual(studentLoan)
-    const apartmentAnnual = apartment * 12
-    const totalExpenses = retirementContribution + studentLoanAnnual + apartmentAnnual + car
-    
-    setAccountBalance(Math.max(netIncome - totalExpenses, 0))
-    setDebt(Math.max(totalExpenses - netIncome, 0))
-    setInvestments(retirementContribution)
-  }
+  useEffect(() => setTotals([accountBalance, debt, investments]), [
+    accountBalance,
+    debt,
+    investments
+  ])
 
   useEffect(() => {
-    let sl = [...sliders]
-    sl[sliderIndex] = true
-    setSliders(sl)
-
-    // clear the recurring interval at end of array
-    if (sliderIndex === sliders.length) {
-      clearInterval(intervalContainer.current)
-    }
-    // eslint-disable-next-line
-  }, [sliderIndex])
-
-  useEffect(() => setTotals([accountBalance, debt, investments]), [accountBalance, debt, investments])
+    const { netIncome, totalExpenses, investments } = calculateSummary({ ...choices })
+    console.log(netIncome, totalExpenses, investments)
+    setAccountBalance(Math.max(netIncome - totalExpenses, 0))
+    setDebt(Math.max(totalExpenses - netIncome, 0))
+    setInvestments(investments)
+  }, [])
 
   return (
     <Grid
@@ -74,6 +58,7 @@ function Summary(props) {
       direction="column"
       justify="space-between"
       alignItems="flex-start">
+      {/* {JSON.stringify(accountBalanceOverTime)} */}
       <Grid item>
         <Slide direction="right" in={sliders[0]} mountOnEnter unmountOnExit>
           <Typography variant="h4">Summary:</Typography>
@@ -94,18 +79,22 @@ function Summary(props) {
         </Grid>
         <Grid item>
           <Slide direction="right" in={sliders[2]} mountOnEnter unmountOnExit>
-            <Typography variant="h6" >Debt: {toCurrency(debt)}</Typography>
+            <Typography variant="h6">Debt: {toCurrency(debt)}</Typography>
           </Slide>
         </Grid>
         <Grid item>
           <Slide direction="right" in={sliders[3]} mountOnEnter unmountOnExit>
-            <Typography variant="h6" >401(k): {toCurrency(investments)}</Typography>
+            <Typography variant="h6">
+              401(k): {toCurrency(investments)}
+            </Typography>
           </Slide>
         </Grid>
         <Grid item>
           <Slide direction="right" in={sliders[4]} mountOnEnter unmountOnExit>
             <Typography variant="h6" className="summary-page-text">
-            <Box fontWeight="fontWeightBold">Net Worth: {toCurrency(accountBalance + investments - debt)}</Box>
+              <Box fontWeight="fontWeightBold">
+                Net Worth: {toCurrency(accountBalance + investments - debt)}
+              </Box>
             </Typography>
           </Slide>
         </Grid>

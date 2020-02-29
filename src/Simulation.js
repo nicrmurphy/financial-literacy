@@ -8,11 +8,13 @@ import { options } from './constants.js'
 
 function Simulation() {
   const [page, setPage] = useState(0)
+  const [pageComplete, setPageComplete] = useState(false)
+  const [progress, setProgress] = useState(page) // furthest completed page
   const [choices, setChoices] = useState({
     salary: 0,
     studentLoan: 0,
-    car: 0,
-    apartment: 0
+    apartment: 0,
+    car: 0
   })
 
   /**
@@ -34,25 +36,14 @@ function Simulation() {
     <Welcome nextPage={() => setPage(page + 1)} />,
     buildPageComponent(1, 'Salary', 'salary'),
     buildPageComponent(2, 'Student Loan', 'studentLoan'),
-    buildPageComponent(3, 'Car', 'car'),
-    buildPageComponent(4, 'Apartment', 'apartment'),
-    <Summary choices={{ ...choices }} />,
+    buildPageComponent(3, 'Apartment', 'apartment'),
+    buildPageComponent(4, 'Car', 'car'),
+    <Summary choices={{ ...choices }} />
   ]
 
-  // TODO: better method for disable next button
-  const [pageInfo, setPageInfo] = useState([
-    { complete: true }, // welcome page
-    { complete: false },
-    { complete: false },
-    { complete: false },
-    { complete: false },
-    { complete: true } // summary page
-  ])
-
   const completePage = (pageIndex, key, value) => {
-    pageInfo[pageIndex].complete = true
-    setPageInfo([...pageInfo])
-
+    setPageComplete(true)
+    setProgress(progress => Math.max(pageIndex, progress))
     setChoices({ ...choices, [key]: value })
   }
 
@@ -87,7 +78,10 @@ function Simulation() {
               <Button
                 variant="contained"
                 color="default"
-                onClick={() => setPage(page - 1)}
+                onClick={() => {
+                  setPage(page => page - 1)
+                  setPageComplete(true)
+                }}
                 disabled={false}>
                 Back
               </Button>
@@ -97,16 +91,10 @@ function Simulation() {
                 <Button
                   variant="contained"
                   color="secondary"
-                  onClick={() =>
-                    setPageInfo([
-                      { complete: true },
-                      { complete: true },
-                      { complete: true },
-                      { complete: true },
-                      { complete: true },
-                      { complete: true }
-                    ])
-                  }>
+                  onClick={() => {
+                    setProgress(Infinity)
+                    setPageComplete(true)
+                  }}>
                   Cheat
                 </Button>
               )}
@@ -115,12 +103,11 @@ function Simulation() {
               <Button
                 variant="contained"
                 color="primary"
-                onClick={() => setPage(page + 1)}
-                disabled={
-                  pageInfo[page]
-                    ? !pageInfo[page].complete
-                    : !pageInfo[page + 1]
-                }>
+                onClick={() => {
+                  setPage(page => page + 1)
+                  setPageComplete(page < progress)
+                }}
+                disabled={!pageComplete}>
                 Next
               </Button>
             </Grid>
