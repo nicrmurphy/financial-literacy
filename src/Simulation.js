@@ -94,6 +94,12 @@ function Simulation() {
                   onClick={() => {
                     setProgress(Infinity)
                     setPageComplete(true)
+                    setChoices({
+                      salary: 42000,
+                      studentLoan: 10,
+                      apartment: 1000,
+                      car: 10000
+                    })
                   }}>
                   Cheat
                 </Button>
