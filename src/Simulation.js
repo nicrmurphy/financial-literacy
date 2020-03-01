@@ -5,6 +5,7 @@ import Welcome from './pages/Welcome'
 import Summary from './pages/Summary'
 import RadioSelector from './pages/RadioSelector'
 import { options } from './constants.js'
+import { Prompt } from 'react-router'
 
 function Simulation() {
   const [page, setPage] = useState(0)
@@ -49,6 +50,10 @@ function Simulation() {
 
   return (
     <Container maxWidth="sm" style={{ minHeight: '75%' }}>
+      <Prompt
+        when={progress > 0}
+        message="If you leave, all your progress will be lost!"
+      />
       <Grid
         container
         direction="column"

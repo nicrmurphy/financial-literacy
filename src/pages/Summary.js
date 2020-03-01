@@ -45,7 +45,7 @@ function Summary({ choices }) {
 
   // delay element transitions for ripple effect using setInterval()
   const ms = 200
-  const nElements = 7 // number of elements sliding in
+  const nElements = 5 // number of elements sliding in
   useEffect(() => {
     const delayInterval = setInterval(() => {
       setSliders(prevSliders => {
@@ -79,7 +79,7 @@ function Summary({ choices }) {
   const currentInvestments = [...summaryData.investments].pop()
 
   const renderSummaryText = () => (
-    <Box style={{textAlign: 'left'}}>
+    <Box style={{ textAlign: 'left' }}>
       <Slide direction="right" in={sliders[0]} mountOnEnter unmountOnExit>
         <Typography variant="h4">Summary:</Typography>
       </Slide>
@@ -109,89 +109,87 @@ function Summary({ choices }) {
     </Box>
   )
 
-  const renderDoughnutGraph = () =>
-    sliders[5] && (
-      <Box style={{ padding: '14x', marginTop: '10px', marginBottom: '50px' }}>
-        <Doughnut
-          data={{
-            labels: ['Account Balance', 'Debt', '401(k)'],
-            datasets: [
-              {
-                label: 'Totals',
-                data: [currentAccountBalance, currentDebt, currentInvestments],
-                backgroundColor: [
-                  'rgba(99, 185, 255, 0.2)',
-                  'rgba(255, 99, 132, 0.2)',
-                  'rgba(112, 255, 99, 0.2)'
-                ],
-                borderWidth: 1
-              }
-            ]
-          }}
-          options={{
-            responsive: true
-          }}
-        />
-      </Box>
-    )
-
-  const renderLineGraph = () =>
-    sliders[6] && (
-      <Box
-        style={{
-          width: Math.max(window.innerWidth, window.innerHeight) / 2,
-          maxWidth: window.innerWidth - 20,
-          height: Math.min(window.innerWidth, window.innerHeight),
-          maxHeight: Math.max(window.innerWidth, window.innerHeight) / 2
-        }}>
-        <Line
-          data={{
-            labels: years,
-            datasets: [
-              {
-                label: 'Account Balance',
-                data: summaryData.accountBalance,
-                backgroundColor: ['rgba(99, 185, 255, 0.2)'],
-                borderWidth: 1
-              },
-              {
-                label: 'Debt',
-                data: summaryData.debt,
-                backgroundColor: ['rgba(255, 99, 132, 0.2)'],
-                borderWidth: 1
-              },
-              {
-                label: '401(k)',
-                data: summaryData.investments,
-                backgroundColor: ['rgba(112, 255, 99, 0.2)'],
-                borderWidth: 1
-              }
-            ]
-          }}
-          options={{
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-              xAxes: [
-                {
-                  scaleLabel: {
-                    display: true,
-                    labelString: 'Years'
-                  }
-                },
+  const renderDoughnutGraph = () => (
+    <Box style={{ padding: '14x', marginTop: '10px', marginBottom: '50px' }}>
+      <Doughnut
+        data={{
+          labels: ['Account Balance', 'Debt', '401(k)'],
+          datasets: [
+            {
+              label: 'Totals',
+              data: [currentAccountBalance, currentDebt, currentInvestments],
+              backgroundColor: [
+                'rgba(99, 185, 255, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(112, 255, 99, 0.2)'
               ],
-              yAxes: [
-                {
-                  ticks: {
-                    suggestedMin: 0
-                  }
-                }
-              ]
+              borderWidth: 1
             }
-          }}
-        />
-      </Box>
-    )
+          ]
+        }}
+        options={{
+          responsive: true
+        }}
+      />
+    </Box>
+  )
+
+  const renderLineGraph = () => (
+    <Box
+      style={{
+        width: Math.max(window.innerWidth, window.innerHeight) / 2,
+        maxWidth: window.innerWidth - 20,
+        height: Math.min(window.innerWidth, window.innerHeight),
+        maxHeight: Math.max(window.innerWidth, window.innerHeight) / 2
+      }}>
+      <Line
+        data={{
+          labels: years,
+          datasets: [
+            {
+              label: 'Account Balance',
+              data: summaryData.accountBalance,
+              backgroundColor: ['rgba(99, 185, 255, 0.2)'],
+              borderWidth: 1
+            },
+            {
+              label: 'Debt',
+              data: summaryData.debt,
+              backgroundColor: ['rgba(255, 99, 132, 0.2)'],
+              borderWidth: 1
+            },
+            {
+              label: '401(k)',
+              data: summaryData.investments,
+              backgroundColor: ['rgba(112, 255, 99, 0.2)'],
+              borderWidth: 1
+            }
+          ]
+        }}
+        options={{
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            xAxes: [
+              {
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Years'
+                }
+              }
+            ],
+            yAxes: [
+              {
+                ticks: {
+                  suggestedMin: 0
+                }
+              }
+            ]
+          }
+        }}
+      />
+    </Box>
+  )
 
   return (
     <Grid
