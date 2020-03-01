@@ -3,9 +3,11 @@ import { getStudentLoanAnnual } from './constants'
 /**
  * Returns an object containing calculated income, expenses, and investments
  * @param {Object} choices input data from user choices
- * @param {Number} years the number of years to calculate
+ * @param {Number} years the number of years to calculate for
  */
 export function calcSummary({ salary, studentLoan, apartment, car }, years) {
+  salary += (salary * .01 * Math.max(years - 1, 0)) // after first year, raise salary by 1% annually
+  console.log('salary: ', salary, 'years: ', years)
   // calculate net income
   const taxRate = 0.75 // income tax, property tax, etc
   const miscCostRate = 0.7 // miscellaneous costs and purchases

@@ -10,7 +10,7 @@ import { calcSummary } from '../formulas'
  */
 function Summary({ choices }) {
   const [sliders, setSliders] = useState([])
-  const [years, setYears] = useState([0])
+  const [years, setYears] = useState([1])
 
   /**
    * indices of the following arrays = year; values are running totals
@@ -32,7 +32,7 @@ function Summary({ choices }) {
     const accountBalance = Math.max(netIncome - totalExpenses, 0)
     const debt = Math.max(totalExpenses - netIncome, 0)
 
-    console.log([...years].pop(), netIncome, totalExpenses, investments)
+    console.log('years: ', [...years].pop(), 'netIncome: ', netIncome, 'totalExpenses: ', totalExpenses, 'investments: ', investments)
 
     setSummaryData(prev => {
       return {
@@ -65,7 +65,7 @@ function Summary({ choices }) {
           return [...years, years[years.length - 1] + 1]
         })
       }, 100)
-    }, ms * nElements + 2000) // wait to display calculations until after ripple
+    }, ms * nElements + ms) // wait to display calculations until after ripple
 
     return () => {
       clearInterval(delayInterval)
