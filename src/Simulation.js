@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import './App.css'
-import { Container, Button, Grid, Input } from '@material-ui/core'
+import { Container, Button, Grid } from '@material-ui/core'
 import Welcome from './pages/Welcome'
 import Summary from './pages/Summary'
 import RadioSelector from './pages/RadioSelector'
@@ -14,6 +14,7 @@ function Simulation() {
   const [progress, setProgress] = useState(page) // furthest completed page
   const [choices, setChoices] = useState({
     salary: 0,
+    investmentPercentage: '',
     studentLoan: 0,
     apartment: 0,
     car: 0
@@ -38,11 +39,16 @@ function Simulation() {
     <Welcome nextPage={() => setPage(page + 1)} />,
     buildPageComponent(1, 'Salary', 'salary'),
     <InputSelector
-      name={'Investments'}
-      complete={result => completePage(2, '', result)}
+      name={'Amount'}
+      salary={choices.salary}
+      selected={choices.investmentPercentage}
+      complete={result => {
+        completePage(2, '', result)
+        setChoices({ ...choices, investmentPercentage: result / 100 })
+      }}
       incomplete={() => {
         setPageComplete(false)
-        // setChoices({ ...choices, })
+        setChoices({ ...choices, investmentPercentage: 0 })
       }}
     />,
     buildPageComponent(2, 'Student Loan', 'studentLoan'),
