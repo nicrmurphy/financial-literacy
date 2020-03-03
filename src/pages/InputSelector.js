@@ -33,6 +33,8 @@ function InputSelector({ name, salary, selected, complete, incomplete }) {
             label={name}
             onChange={e => handleChange(e)}
             variant="outlined"
+            autoComplete="off"
+            autoFocus
             InputProps={{
               endAdornment: <InputAdornment position="end">%</InputAdornment>,
             }}

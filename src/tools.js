@@ -4,4 +4,4 @@
  * @param {Number} n 
  */
 // TODO: fix decimal rounding bug
-export const toCurrency = n => `$${n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`
+export const toCurrency = n => `$${Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`

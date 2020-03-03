@@ -8,7 +8,7 @@ import { calcSummary } from '../formulas'
  * This is the page that is displayed at key times throughout the
  * simulation to assess and inform the player of their progress.
  */
-function Summary({ choices }) {
+function Summary({ choices, complete }) {
   const [sliders, setSliders] = useState([])
   const [years, setYears] = useState([1])
 
@@ -45,7 +45,7 @@ function Summary({ choices }) {
 
   // delay element transitions for ripple effect using setInterval()
   const ms = 200
-  const nElements = 5 // number of elements sliding in
+  const nElements = 7 // number of elements sliding in
   useEffect(() => {
     const delayInterval = setInterval(() => {
       setSliders(prevSliders => {
@@ -59,10 +59,12 @@ function Summary({ choices }) {
       const nYears = 15
       yearsInterval = setInterval(() => {
         setYears(years => {
-          if (years.length === nYears) {
+          if (years.length >= nYears) {
             clearInterval(yearsInterval)
+            complete()
+            return years
           }
-          return [...years, years[years.length - 1] + 1]
+          return [...years, [...years].pop() + 1]
         })
       }, 100)
     }, ms * nElements + ms) // wait to display calculations until after ripple
@@ -72,7 +74,7 @@ function Summary({ choices }) {
       clearInterval(yearsInterval)
       clearTimeout(delayBeforeCalc)
     }
-  }, [])
+  }, [complete])
 
   const currentAccountBalance = [...summaryData.accountBalance].pop()
   const currentDebt = [...summaryData.debt].pop()
@@ -81,7 +83,7 @@ function Summary({ choices }) {
   const renderSummaryText = () => (
     <Box style={{ textAlign: 'left' }}>
       <Slide direction="right" in={sliders[0]} mountOnEnter unmountOnExit>
-        <Typography variant="h4">Summary:</Typography>
+        <Typography variant="h4">Summary: Year {[...years].pop()}</Typography>
       </Slide>
       <Slide direction="right" in={sliders[1]} mountOnEnter unmountOnExit>
         <Typography variant="h6" className="summary-page-text">
@@ -110,7 +112,7 @@ function Summary({ choices }) {
   )
 
   const renderDoughnutGraph = () => (
-    <Box style={{ padding: '14x', marginTop: '10px', marginBottom: '50px' }}>
+    sliders[5] && <Box style={{ padding: '14x', marginTop: '10px', marginBottom: '50px' }}>
       <Doughnut
         data={{
           labels: ['Account Balance', 'Debt', '401(k)'],
@@ -135,7 +137,7 @@ function Summary({ choices }) {
   )
 
   const renderLineGraph = () => (
-    <Box
+    sliders[6] && <Box
       style={{
         width: Math.max(window.innerWidth, window.innerHeight) / 2,
         maxWidth: window.innerWidth - 20,
@@ -144,7 +146,7 @@ function Summary({ choices }) {
       }}>
       <Line
         data={{
-          labels: years,
+          labels: years.map(year => year - 1),
           datasets: [
             {
               label: 'Account Balance',

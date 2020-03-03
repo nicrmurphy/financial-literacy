@@ -41,7 +41,9 @@ function Simulation() {
     <InputSelector
       name={'Amount'}
       salary={choices.salary}
-      selected={choices.investmentPercentage}
+      selected={
+        choices.investmentPercentage ? choices.investmentPercentage * 100 : ''
+      }
       complete={result => {
         completePage(2, '', result)
         setChoices({ ...choices, investmentPercentage: result / 100 })
@@ -51,16 +53,16 @@ function Simulation() {
         setChoices({ ...choices, investmentPercentage: 0 })
       }}
     />,
-    buildPageComponent(2, 'Student Loan', 'studentLoan'),
-    buildPageComponent(3, 'Apartment', 'apartment'),
-    buildPageComponent(4, 'Car', 'car'),
-    <Summary choices={{ ...choices }} />
+    buildPageComponent(3, 'Student Loan', 'studentLoan'),
+    buildPageComponent(4, 'Apartment', 'apartment'),
+    buildPageComponent(5, 'Car', 'car'),
+    <Summary choices={{ ...choices }} complete={() => completePage(6)} />
   ]
 
   const completePage = (pageIndex, key, value) => {
     setPageComplete(true)
     setProgress(progress => Math.max(pageIndex, progress))
-    setChoices({ ...choices, [key]: value })
+    if (key && value) setChoices({ ...choices, [key]: value })
   }
 
   return (
@@ -116,6 +118,7 @@ function Simulation() {
                     setPageComplete(true)
                     setChoices({
                       salary: 42000,
+                      investmentPercentage: 0.1,
                       studentLoan: 10,
                       apartment: 1000,
                       car: 10000

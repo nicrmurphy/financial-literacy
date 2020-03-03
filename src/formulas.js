@@ -8,6 +8,7 @@ import { getStudentLoanAnnual } from './constants'
 export function calcSummary({ salary, investmentPercentage, studentLoan, apartment, car }, years) {
   salary += (salary * .01 * Math.max(years - 1, 0)) // after first year, raise salary by 1% annually
   console.log('salary: ', salary, 'years: ', years)
+  
   // calculate net income
   const taxRate = 0.75 // income tax, property tax, etc
   const miscCostRate = 0.7 // miscellaneous costs and purchases
