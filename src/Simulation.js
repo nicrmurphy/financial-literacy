@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
 import './App.css'
-import { Container, Button, Grid } from '@material-ui/core'
+import { Container, Button, Grid, Input } from '@material-ui/core'
 import Welcome from './pages/Welcome'
 import Summary from './pages/Summary'
 import RadioSelector from './pages/RadioSelector'
+import InputSelector from './pages/InputSelector'
 import { options } from './constants.js'
 import { Prompt } from 'react-router'
 
@@ -36,6 +37,14 @@ function Simulation() {
   const pages = [
     <Welcome nextPage={() => setPage(page + 1)} />,
     buildPageComponent(1, 'Salary', 'salary'),
+    <InputSelector
+      name={'Investments'}
+      complete={result => completePage(2, '', result)}
+      incomplete={() => {
+        setPageComplete(false)
+        // setChoices({ ...choices, })
+      }}
+    />,
     buildPageComponent(2, 'Student Loan', 'studentLoan'),
     buildPageComponent(3, 'Apartment', 'apartment'),
     buildPageComponent(4, 'Car', 'car'),
