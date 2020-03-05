@@ -15,10 +15,17 @@ function Simulation() {
   const [choices, setChoices] = useState({
     salary: 0,
     investmentPercentage: '',
-    studentLoan: 0,
+    studentLoanYears: 0,
     apartment: 0,
-    car: 0
+    carLoanYears: 0
   })
+  const cheatChoices = {
+    salary: 42000,
+    investmentPercentage: 0.1,
+    studentLoanYears: 10,
+    apartment: 1000,
+    carLoanYears: 10
+  }
 
   /**
    * Returns a RadioSelector component for dynamic page creation.
@@ -53,9 +60,9 @@ function Simulation() {
         setChoices({ ...choices, investmentPercentage: 0 })
       }}
     />,
-    buildPageComponent(3, 'Student Loan', 'studentLoan'),
+    buildPageComponent(3, 'Student Loan', 'studentLoanYears'),
     buildPageComponent(4, 'Apartment', 'apartment'),
-    buildPageComponent(5, 'Car', 'car'),
+    buildPageComponent(5, 'Car Loan', 'carLoanYears'),
     <Summary choices={{ ...choices }} complete={() => completePage(6)} />
   ]
 
@@ -116,13 +123,7 @@ function Simulation() {
                   onClick={() => {
                     setProgress(Infinity)
                     setPageComplete(true)
-                    setChoices({
-                      salary: 42000,
-                      investmentPercentage: 0.1,
-                      studentLoan: 10,
-                      apartment: 1000,
-                      car: 10000
-                    })
+                    setChoices(cheatChoices)
                   }}>
                   Cheat
                 </Button>

@@ -25,12 +25,11 @@ function Summary({ choices, complete }) {
   })
 
   useEffect(() => {
-    const { netIncome, totalExpenses, totalRemainingLoans, investments } = calcSummary(
+    const { netIncome, totalExpenses, debt, investments } = calcSummary(
       { ...choices },
       [...years].pop()
     )
     const accountBalance = netIncome - totalExpenses
-    const debt = totalRemainingLoans
 
     // console.log('years: ', [...years].pop(), 'netIncome: ', netIncome, 'totalExpenses: ', totalExpenses, 'investments: ', investments)
 
