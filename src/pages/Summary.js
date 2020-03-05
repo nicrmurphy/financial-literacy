@@ -29,10 +29,10 @@ function Summary({ choices, complete }) {
       { ...choices },
       [...years].pop()
     )
-    const accountBalance = Math.max(netIncome - totalExpenses, 0)
-    const debt = Math.max(totalExpenses - netIncome, 0)
+    const accountBalance = netIncome - totalExpenses
+    const debt = Math.max(0 , 0) // TODO: redefine
 
-    console.log('years: ', [...years].pop(), 'netIncome: ', netIncome, 'totalExpenses: ', totalExpenses, 'investments: ', investments)
+    // console.log('years: ', [...years].pop(), 'netIncome: ', netIncome, 'totalExpenses: ', totalExpenses, 'investments: ', investments)
 
     setSummaryData(prev => {
       return {
@@ -56,7 +56,7 @@ function Summary({ choices, complete }) {
 
     let yearsInterval
     const delayBeforeCalc = setTimeout(() => {
-      const nYears = 15
+      const nYears = 45
       yearsInterval = setInterval(() => {
         setYears(years => {
           if (years.length >= nYears) {
@@ -83,7 +83,7 @@ function Summary({ choices, complete }) {
   const renderSummaryText = () => (
     <Box style={{ textAlign: 'left' }}>
       <Slide direction="right" in={sliders[0]} mountOnEnter unmountOnExit>
-        <Typography variant="h4">Summary: Year {[...years].pop()}</Typography>
+        <Typography variant="h4">Summary: Year {[...years].pop() + 20}</Typography>
       </Slide>
       <Slide direction="right" in={sliders[1]} mountOnEnter unmountOnExit>
         <Typography variant="h6" className="summary-page-text">
