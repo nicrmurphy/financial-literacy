@@ -1,6 +1,9 @@
 import { getStudentLoanAnnual } from './constants'
 
-export const presentValue = (n, years) => n / Math.pow(1.0322, years)
+export const presentValue = (n, years) => {
+  if (!years) throw Error('Years undefined')
+  return n / Math.pow(1.0322, years)
+}
 
 /**
  * Returns an object containing calculated income, expenses, and investments
@@ -27,12 +30,23 @@ export function calcSummary({ salary, investmentPercentage, studentLoan, apartme
   const totalExpenses = 
     (studentLoanAnnual + apartmentAnnual) * years + investmentsBeforeInterest + carPayment
 
+  // calculate total debt
+  const totalStudentLoan = getStudentLoanAnnual(studentLoan) * studentLoan
+  const remainingStudentLoan = years <= studentLoan ? totalStudentLoan - studentLoanAnnual * years : 0
+  console.log('year: ', years,
+    'total: ',totalStudentLoan,
+    'payment: ', studentLoanAnnual,
+    'remaining: ', remainingStudentLoan
+  )
+  console.log(presentValue(remainingStudentLoan, years))
+
   return {
     // netIncome: netIncome, years,
     // totalExpenses: totalExpenses, years,
     // investments: investments, years
     netIncome: presentValue(netIncome, years),
     totalExpenses: presentValue(totalExpenses, years),
+    totalRemainingLoans: presentValue(remainingStudentLoan, years),
     investments: presentValue(investments, years)
   }
 }

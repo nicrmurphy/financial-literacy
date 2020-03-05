@@ -19,18 +19,18 @@ function Summary({ choices, complete }) {
    * values[15] = val(year15) + values[14] + values[13] + ... + values[0];
    */
   const [summaryData, setSummaryData] = useState({
-    accountBalance: [0],
-    debt: [0],
-    investments: [0]
+    accountBalance: [],
+    debt: [],
+    investments: []
   })
 
   useEffect(() => {
-    const { netIncome, totalExpenses, investments } = calcSummary(
+    const { netIncome, totalExpenses, totalRemainingLoans, investments } = calcSummary(
       { ...choices },
       [...years].pop()
     )
     const accountBalance = netIncome - totalExpenses
-    const debt = Math.max(0 , 0) // TODO: redefine
+    const debt = totalRemainingLoans
 
     // console.log('years: ', [...years].pop(), 'netIncome: ', netIncome, 'totalExpenses: ', totalExpenses, 'investments: ', investments)
 
@@ -56,7 +56,7 @@ function Summary({ choices, complete }) {
 
     let yearsInterval
     const delayBeforeCalc = setTimeout(() => {
-      const nYears = 45
+      const nYears = 15
       yearsInterval = setInterval(() => {
         setYears(years => {
           if (years.length >= nYears) {
@@ -83,7 +83,7 @@ function Summary({ choices, complete }) {
   const renderSummaryText = () => (
     <Box style={{ textAlign: 'left' }}>
       <Slide direction="right" in={sliders[0]} mountOnEnter unmountOnExit>
-        <Typography variant="h4">Summary: Year {[...years].pop() + 20}</Typography>
+        <Typography variant="h4">Summary: Age {[...years].pop() + 20}</Typography>
       </Slide>
       <Slide direction="right" in={sliders[1]} mountOnEnter unmountOnExit>
         <Typography variant="h6" className="summary-page-text">
@@ -146,23 +146,23 @@ function Summary({ choices, complete }) {
       }}>
       <Line
         data={{
-          labels: years.map(year => year - 1),
+          labels: years.map(year => year + 20),
           datasets: [
             {
               label: 'Account Balance',
-              data: summaryData.accountBalance,
+              data: summaryData.accountBalance.map(n => Math.round(n)),
               backgroundColor: ['rgba(99, 185, 255, 0.2)'],
               borderWidth: 1
             },
             {
               label: 'Debt',
-              data: summaryData.debt,
+              data: summaryData.debt.map(n => Math.round(n)),
               backgroundColor: ['rgba(255, 99, 132, 0.2)'],
               borderWidth: 1
             },
             {
               label: '401(k)',
-              data: summaryData.investments,
+              data: summaryData.investments.map(n => Math.round(n)),
               backgroundColor: ['rgba(112, 255, 99, 0.2)'],
               borderWidth: 1
             }
@@ -176,7 +176,7 @@ function Summary({ choices, complete }) {
               {
                 scaleLabel: {
                   display: true,
-                  labelString: 'Years'
+                  labelString: 'Age'
                 }
               }
             ],
