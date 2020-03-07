@@ -21,7 +21,7 @@ function Welcome(props) {
 
   return (
     <Box>
-      <p>
+      <p id="welcome-text">
         Welcome to the simulation! This app is in active development. For
         comments or inquiries, please contact {blusGoldLink}. The source code
         for this app can be found {sourceCodeLink}. Most recent update was{' '}

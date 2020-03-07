@@ -8,11 +8,85 @@
   height: auto;
 }
 
-@media only screen and (max-width: 768px) {
-  /* For mobile phones: */
-  
+#header {
+  padding: 1vh;
 }
 
+.header-text {
+  margin: 0;
+}
+
+h1.header-text {
+  font-size: 5vh;
+}
+
+h2.header-text {
+  font-size: 3vh;
+}
+
+#simulation-container {
+  padding: 0;
+}
+
+#simulation-wrapper {
+  min-height: 85vh; 
+  /* max-height: 85vh;  */
+}
+
+#simulation-window {
+  min-height: 72vh;
+  max-height: 72vh;
+  overflow: auto;
+  font-size: 2em;
+  margin-bottom: .25em;
+}
+
+#button-nav {
+  margin-top: .25em;
+}
+
+#welcome-text {
+  width: 90%;
+  margin: auto;
+  margin-top: 2em;
+  margin-bottom: 2em;
+}
+
+#summary-text-wrapper {
+  padding: .5em;
+}
+
+#summary-doughnut-wrapper {
+  margin: auto;
+}
+
+#footer-text {
+  color: lightgray;
+  font-size: .1em;
+  margin-top: 2em;
+  margin-bottom: .25em;
+}
+
+@media only screen and (max-width: 768px) {
+  /* For mobile phones: */
+  /* #simulation-container {
+    padding: 0;
+  } */
+
+  #simulation-window {
+    font-size: 1.5em;
+  }
+
+  #footer-text {
+    font-size: .75em;
+  }
+}
+
+/* debug CSS */
 /* * {
-  border: 1px solid red;
+  border: 1px solid pink;
 } */
+
+/* #header { border: solid blue 1px; }
+#simulation-wrapper { border: solid green 1px; }
+#simulation-window { border: solid red 1px; } */

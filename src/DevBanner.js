@@ -9,8 +9,8 @@ function DevBanner() {
         <Box>
           <AppBar
             position="static"
-            style={{ height: '50px', backgroundColor: 'green' }}>
-            <Typography variant="h5" style={{ marginTop: '8px' }}>
+            style={{ minHeight: '2em', backgroundColor: 'green' }}>
+            <Typography variant="h5" style={{ marginTop: '.5vh', fontSize: '2em' }}>
               Running in Development Mode{' '}
               <span id="full-banner-text">on {window.location.href}</span>
             </Typography>

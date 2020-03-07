@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import './App.css'
 import { Container, Button, Grid } from '@material-ui/core'
+import Footer from './Footer'
 import Welcome from './pages/Welcome'
 import Summary from './pages/Summary'
 import RadioSelector from './pages/RadioSelector'
@@ -92,17 +93,17 @@ function Simulation() {
   }
 
   return (
-    <Container maxWidth="sm" style={{ minHeight: '75%' }}>
+    <Container id="simulation-container" maxWidth="sm">
       <Prompt
         when={progress > 0}
         message="If you leave, all your progress will be lost!"
       />
       <Grid
+        id="simulation-wrapper"
         container
         direction="column"
         justify="space-between"
-        alignItems="center"
-        style={{ minHeight: '400px' }}>
+        alignItems="center">
         <Grid
           id="simulation-window"
           item
@@ -162,6 +163,7 @@ function Simulation() {
             </Grid>
           </Grid>
         )}
+        <Grid item><Footer/></Grid>
       </Grid>
     </Container>
   )

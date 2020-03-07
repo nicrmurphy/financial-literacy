@@ -2,11 +2,7 @@ import React from 'react'
 
 function Footer() {
   return (
-    <p
-      style={{
-        color: 'lightgrey',
-        paddingBottom: '5px'
-      }}>
+    <p id="footer-text">
       This app is developed and hosted by{' '}
       <a
         style={{ color: 'lightgrey' }}

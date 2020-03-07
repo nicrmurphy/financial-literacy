@@ -160,7 +160,8 @@ function Summary({ choices, complete, startYear, endYear }) {
           ]
         }}
         options={{
-          responsive: true
+          responsive: true,
+          maintainAspectRatio: false
         }}
       />
     </Box>
