@@ -37,7 +37,7 @@ h2.header-text {
   min-height: 72vh;
   max-height: 72vh;
   overflow: auto;
-  font-size: 2em;
+  font-size: 1.75em;
   margin-bottom: .25em;
 }
 
@@ -48,8 +48,8 @@ h2.header-text {
 #welcome-text {
   width: 90%;
   margin: auto;
-  margin-top: 2em;
-  margin-bottom: 2em;
+  margin-top: 1vh;
+  margin-bottom: 1vh;
 }
 
 #summary-text-wrapper {
