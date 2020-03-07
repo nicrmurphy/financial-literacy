@@ -35,6 +35,7 @@ function InputSelector({ name, salary, selected, complete, incomplete }) {
             variant="outlined"
             autoComplete="off"
             autoFocus
+            type="Number"
             InputProps={{
               endAdornment: <InputAdornment position="end">%</InputAdornment>,
             }}

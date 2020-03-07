@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import './App.css'
-import { Container, Button, Grid } from '@material-ui/core'
+import { Container, Button, Grid, Typography } from '@material-ui/core'
 import Footer from './Footer'
 import Welcome from './pages/Welcome'
 import Summary from './pages/Summary'
 import RadioSelector from './pages/RadioSelector'
 import InputSelector from './pages/InputSelector'
-import { options } from './constants.js'
+import { ageGroups, options, cheatChoices } from './constants.js'
 import { Prompt } from 'react-router'
 
 function Simulation() {
@@ -18,15 +18,9 @@ function Simulation() {
     investmentPercentage: '',
     studentLoanYears: 0,
     apartment: 0,
-    carLoanYears: 0
+    carLoanYears: 0,
+    fancyCarLoanYears: 0
   })
-  const cheatChoices = {
-    salary: 42000,
-    investmentPercentage: 0.1,
-    studentLoanYears: 10,
-    apartment: 1000,
-    carLoanYears: 10
-  }
 
   /**
    * Returns a RadioSelector component for dynamic page creation.
@@ -34,12 +28,13 @@ function Simulation() {
    * @param {String} label
    * @param {String} key
    */
-  const buildPageComponent = (pageIndex, label, key) => (
+  const buildPageComponent = (pageIndex, label, key, flavorText) => (
     <RadioSelector
       name={label}
       options={options[key]}
       selected={choices[key]}
       complete={result => completePage(pageIndex, key, result)}
+      flavorText={flavorText}
     />
   )
 
@@ -67,22 +62,32 @@ function Simulation() {
     <Summary
       choices={{ ...choices }}
       complete={() => completePage(6)}
-      startYear={0}
-      endYear={15}
+      startYear={ageGroups.one.start}
+      endYear={ageGroups.one.end}
+    />,
+    buildPageComponent(
+      7,
+      'Fancy Car Loan',
+      'fancyCarLoanYears',
+      <Typography
+        variant="h5"
+        color="primary"
+        style={{ margin: '10px', fontWeight: 'bold' }}>
+        TIME FOR AN UPGRADE...
+      </Typography>
+    ),
+    <Summary
+      choices={{ ...choices }}
+      complete={() => completePage(8)}
+      startYear={ageGroups.two.start}
+      endYear={ageGroups.two.end}
     />,
     null,
     <Summary
       choices={{ ...choices }}
-      complete={() => completePage(8)}
-      startYear={15}
-      endYear={30}
-    />,
-    null,
-    <Summary
-      choices={{ ...choices }}
-      complete={() => completePage(8)}
-      startYear={30}
-      endYear={45}
+      complete={() => completePage(10)}
+      startYear={ageGroups.three.start}
+      endYear={ageGroups.three.end}
     />
   ]
 
@@ -157,13 +162,16 @@ function Simulation() {
                   setPage(page => page + 1)
                   setPageComplete(page < progress)
                 }}
+                onKeyPress={() => alert('test')}
                 disabled={!pageComplete}>
                 Next
               </Button>
             </Grid>
           </Grid>
         )}
-        <Grid item><Footer/></Grid>
+        <Grid item>
+          <Footer />
+        </Grid>
       </Grid>
     </Container>
   )

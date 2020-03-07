@@ -1,8 +1,21 @@
-import { getStudentLoanAnnual, getCarLoanAnnual } from './constants'
+import { getStudentLoanAnnual, getCarLoanAnnual, getFancyCarLoanAnnual } from './constants'
+import { ageGroups } from './constants'
 
 export const presentValue = (n, years) => {
   if (!years) throw Error('Years undefined')
   return n / Math.pow(1.0322, years)
+}
+
+export const debugLoanCalculations = (years, loanType, loanYears, loanStartYear) => {
+  console.log(
+    `${loanType} loan =>`,
+    'year:', years,
+    'total:', getLoanPayments(loanYears + loanStartYear, loanType, loanYears, loanStartYear),
+    'payment:', getLoanPayments(years <= loanYears + loanStartYear && years > loanStartYear ?
+      loanStartYear + 1 : 0, loanType, loanYears, loanStartYear),
+    'paid:', getLoanPayments(years, loanType, loanYears, loanStartYear),
+    'remaining:', getLoanRemaining(years, loanType, loanYears, loanStartYear)
+  )
 }
 
 const raiseSalary = (years, salary, percentage) => salary * Math.pow(1 + percentage, years)
@@ -22,15 +35,19 @@ const getInvestmentContributions = (years, salary, contributionPercentage) => {
  * Returns the total loan payments made over the course of a given number of years
  * @param {Number} years how many years to calculate for
  * @param {String} loanType the type of loan
- * @param {Number} carLoanYears length of loan
+ * @param {Number} loanYears length of loan
+ * @param {Number} loanStartYear what year the loan starts
  */
-const getLoanPayments = (years, loanType, loanYears) => {
-  years = Math.min(years, loanYears) // total caps when loan is complete
+const getLoanPayments = (years, loanType, loanYears, loanStartYear) => {
+  if (years <= loanStartYear) return 0 // loan hasn't started yet
+  years = Math.min(years, loanYears + loanStartYear) // total caps when loan is complete
   switch (loanType) {
     case 'car':
-      return getCarLoanAnnual(loanYears) * years
+      return getCarLoanAnnual(loanYears) * (years - loanStartYear)
     case 'student':
-      return getStudentLoanAnnual(loanYears) * years
+      return getStudentLoanAnnual(loanYears) * (years - loanStartYear)
+    case 'fancy car':
+      return getFancyCarLoanAnnual(loanYears) * (years  - loanStartYear)
     default:
       return NaN
   }
@@ -40,17 +57,22 @@ const getLoanPayments = (years, loanType, loanYears) => {
  * Returns the total loan payments remaining after a given number of years
  * @param {Number} years how many years to calculate for
  * @param {String} loanType the type of loan
- * @param {Number} carLoanYears length of loan
+ * @param {Number} loanYears length of loan
+ * @param {Number} loanStartYear what year the loan starts
  */
-const getLoanRemaining = (years, loanType, loanYears) =>
-  getLoanPayments(loanYears, loanType, loanYears) - getLoanPayments(years, loanType, loanYears)
+const getLoanRemaining = (years, loanType, loanYears, loanStartYear) => {
+  if (years <= loanStartYear) return 0 // loan hasn't started yet
+  return getLoanPayments(loanYears + loanStartYear, loanType, loanYears, loanStartYear)
+  - getLoanPayments(years, loanType, loanYears, loanStartYear)
+}
 
 /**
  * Returns an object containing calculated income, expenses, debt and investments
  * @param {Object} choices input data from user choices
  * @param {Number} years the number of years to calculate for
  */
-export function calcSummary({ salary, investmentPercentage, studentLoanYears, apartment, carLoanYears }, years) {
+export function calcSummary({ salary, investmentPercentage, studentLoanYears, apartment, carLoanYears, fancyCarLoanYears }, years) {
+  // console.log('calc year', years)
   const investmentContributions = getInvestmentContributions(years, salary, investmentPercentage)
   salary = raiseSalary(years, salary, .01) // after first year, raise salary by 1% annually
   
@@ -62,30 +84,23 @@ export function calcSummary({ salary, investmentPercentage, studentLoanYears, ap
   /* calculate total expenses */
   const investments = investmentContributions * Math.pow(1.06, years) - investmentContributions // TODO: calculation might be wrong
 
-  const studentLoanPayments = getLoanPayments(years, 'student', studentLoanYears)
+  const studentLoanPayments = getLoanPayments(years, 'student', studentLoanYears, ageGroups.one.start)
   const apartmentPayments = apartment * 12 * years
-  const carPayments = getLoanPayments(years, 'car', carLoanYears)
+  const carPayments =
+    getLoanPayments(years, 'car', carLoanYears, ageGroups.one.start)
+    + getLoanPayments(years, 'fancy car', fancyCarLoanYears, ageGroups.two.start)
   const totalExpenses = 
     studentLoanPayments + apartmentPayments + carPayments + investmentContributions
 
   /* calculate total debt */
-  const debt = getLoanRemaining(years, 'car', carLoanYears) + getLoanRemaining(years, 'student', studentLoanYears)
-  // console.log(
-  //   'Car Loan =>',
-  //   'year:', years,
-  //   'total:', getLoanPayments(carLoanYears, 'car', carLoanYears),
-  //   'payment:', getLoanPayments(years <= carLoanYears ? 1 : 0, 'car', carLoanYears),
-  //   'paid:', getLoanPayments(years, 'car', carLoanYears),
-  //   'remaining:', getLoanRemaining(years, 'car', carLoanYears)
-  // )
-  // console.log(
-  //   'Student Loan =>',
-  //   'year:', years,
-  //   'total:', getLoanPayments(studentLoanYears, 'student', studentLoanYears),
-  //   'payment:', getLoanPayments(years <= studentLoanYears ? 1 : 0, 'student', studentLoanYears),
-  //   'paid:', getLoanPayments(years, 'student', studentLoanYears),
-  //   'remaining:', getLoanRemaining(years, 'student', studentLoanYears)
-  // )
+  const debt =
+    getLoanRemaining(years, 'car', carLoanYears, ageGroups.one.start)
+    + getLoanRemaining(years, 'student', studentLoanYears, ageGroups.one.start)
+    + getLoanRemaining(years, 'fancy car', fancyCarLoanYears, ageGroups.two.start)
+
+  // debugLoanCalculations(years, 'car', carLoanYears, ageGroups.one.start)
+  // debugLoanCalculations(years, 'student', studentLoanYears, ageGroups.one.start)
+  // debugLoanCalculations(years, 'fancy car', fancyCarLoanYears, ageGroups.two.start)
 
   return {
     netIncome: presentValue(netIncome, years),

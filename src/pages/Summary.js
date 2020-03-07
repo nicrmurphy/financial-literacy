@@ -17,7 +17,7 @@ const calcPrevData = (years, choices) => {
     investments: []
   }
 
-  for (let year = 1; year < years.length; year++) {
+  for (let year = 0; year < years.length - 1; year++) {
     const { netIncome, totalExpenses, debt, investments } = calcSummary(
       { ...choices },
       years[year]
@@ -31,7 +31,7 @@ const calcPrevData = (years, choices) => {
       investments: [...summaryData.investments, investments]
     }
 
-    console.log(year, summaryData)
+    // console.log(year, summaryData)
 
   }
   return summaryData
@@ -64,6 +64,7 @@ function Summary({ choices, complete, startYear, endYear }) {
 
     setSummaryData(prev => {
       // console.log(years)
+      // console.log('years: ', [...years].pop(), 'investments:', [...prev.investments, investments].map(n => Math.round(n)))
       return {
         accountBalance: [...prev.accountBalance, accountBalance],
         debt: [...prev.debt, debt],
