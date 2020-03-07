@@ -3,14 +3,47 @@ import { Grid, Typography, Box, Slide } from '@material-ui/core'
 import { Doughnut, Line } from 'react-chartjs-2'
 import { toCurrency } from '../tools'
 import { calcSummary } from '../formulas'
+import { ageOffset } from '../constants'
+
+const calcPrevYears = nYears => {
+  const years = Array.from(Array(nYears), (year, i) => i + 1)
+  return years
+}
+
+const calcPrevData = (years, choices) => {
+  let summaryData = {
+    accountBalance: [],
+    debt: [],
+    investments: []
+  }
+
+  for (let year = 1; year < years.length; year++) {
+    const { netIncome, totalExpenses, debt, investments } = calcSummary(
+      { ...choices },
+      years[year]
+    )
+    const accountBalance = netIncome - totalExpenses
+
+    // console.log('years: ', [...years].pop(), 'netIncome: ', netIncome, 'totalExpenses: ', totalExpenses, 'investments: ', investments)
+    summaryData = {
+      accountBalance: [...summaryData.accountBalance, accountBalance],
+      debt: [...summaryData.debt, debt],
+      investments: [...summaryData.investments, investments]
+    }
+
+    console.log(year, summaryData)
+
+  }
+  return summaryData
+}
 
 /**
  * This is the page that is displayed at key times throughout the
  * simulation to assess and inform the player of their progress.
  */
-function Summary({ choices, complete }) {
+function Summary({ choices, complete, startYear, endYear }) {
   const [sliders, setSliders] = useState([])
-  const [years, setYears] = useState([1])
+  const [years, setYears] = useState(() => calcPrevYears(startYear + 1))
 
   /**
    * indices of the following arrays = year; values are running totals
@@ -18,11 +51,7 @@ function Summary({ choices, complete }) {
    * values[2] = val(year2) + values[1] + values[0];
    * values[15] = val(year15) + values[14] + values[13] + ... + values[0];
    */
-  const [summaryData, setSummaryData] = useState({
-    accountBalance: [],
-    debt: [],
-    investments: []
-  })
+  const [summaryData, setSummaryData] = useState(() => calcPrevData(years, choices))
 
   useEffect(() => {
     const { netIncome, totalExpenses, debt, investments } = calcSummary(
@@ -34,6 +63,7 @@ function Summary({ choices, complete }) {
     // console.log('years: ', [...years].pop(), 'netIncome: ', netIncome, 'totalExpenses: ', totalExpenses, 'investments: ', investments)
 
     setSummaryData(prev => {
+      // console.log(years)
       return {
         accountBalance: [...prev.accountBalance, accountBalance],
         debt: [...prev.debt, debt],
@@ -48,6 +78,7 @@ function Summary({ choices, complete }) {
   useEffect(() => {
     const delayInterval = setInterval(() => {
       setSliders(prevSliders => {
+        // console.log('sliders:', prevSliders.length) // uncomment to check for mem leaks
         if (prevSliders.length === nElements) clearInterval(delayInterval)
         return [...prevSliders, true]
       })
@@ -55,10 +86,10 @@ function Summary({ choices, complete }) {
 
     let yearsInterval
     const delayBeforeCalc = setTimeout(() => {
-      const nYears = 15
       yearsInterval = setInterval(() => {
         setYears(years => {
-          if (years.length >= nYears) {
+          // console.log('years:', years.length) // uncomment to check for mem leaks
+          if (years.length >= endYear) {
             clearInterval(yearsInterval)
             complete()
             return years
@@ -73,7 +104,7 @@ function Summary({ choices, complete }) {
       clearInterval(yearsInterval)
       clearTimeout(delayBeforeCalc)
     }
-  }, [complete])
+  }, [complete, startYear, endYear])
 
   const currentAccountBalance = [...summaryData.accountBalance].pop()
   const currentDebt = [...summaryData.debt].pop()
@@ -145,7 +176,7 @@ function Summary({ choices, complete }) {
       }}>
       <Line
         data={{
-          labels: years.map(year => year + 20),
+          labels: years.map(year => year + ageOffset),
           datasets: [
             {
               label: 'Account Balance',

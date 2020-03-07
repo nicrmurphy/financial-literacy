@@ -1,3 +1,5 @@
+export const ageOffset = 20 // ex: if 20 => simulation starts at age = 21
+
 export const options = {
   salary: [
     { value: 42000, label: '$42,000' }

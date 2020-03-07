@@ -70,22 +70,22 @@ export function calcSummary({ salary, investmentPercentage, studentLoanYears, ap
 
   /* calculate total debt */
   const debt = getLoanRemaining(years, 'car', carLoanYears) + getLoanRemaining(years, 'student', studentLoanYears)
-  console.log(
-    'Car Loan =>',
-    'year:', years,
-    'total:', getLoanPayments(carLoanYears, 'car', carLoanYears),
-    'payment:', getLoanPayments(years <= carLoanYears ? 1 : 0, 'car', carLoanYears),
-    'paid:', getLoanPayments(years, 'car', carLoanYears),
-    'remaining:', getLoanRemaining(years, 'car', carLoanYears)
-  )
-  console.log(
-    'Student Loan =>',
-    'year:', years,
-    'total:', getLoanPayments(studentLoanYears, 'student', studentLoanYears),
-    'payment:', getLoanPayments(years <= studentLoanYears ? 1 : 0, 'student', studentLoanYears),
-    'paid:', getLoanPayments(years, 'student', studentLoanYears),
-    'remaining:', getLoanRemaining(years, 'student', studentLoanYears)
-  )
+  // console.log(
+  //   'Car Loan =>',
+  //   'year:', years,
+  //   'total:', getLoanPayments(carLoanYears, 'car', carLoanYears),
+  //   'payment:', getLoanPayments(years <= carLoanYears ? 1 : 0, 'car', carLoanYears),
+  //   'paid:', getLoanPayments(years, 'car', carLoanYears),
+  //   'remaining:', getLoanRemaining(years, 'car', carLoanYears)
+  // )
+  // console.log(
+  //   'Student Loan =>',
+  //   'year:', years,
+  //   'total:', getLoanPayments(studentLoanYears, 'student', studentLoanYears),
+  //   'payment:', getLoanPayments(years <= studentLoanYears ? 1 : 0, 'student', studentLoanYears),
+  //   'paid:', getLoanPayments(years, 'student', studentLoanYears),
+  //   'remaining:', getLoanRemaining(years, 'student', studentLoanYears)
+  // )
 
   return {
     netIncome: presentValue(netIncome, years),

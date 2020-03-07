@@ -63,7 +63,26 @@ function Simulation() {
     buildPageComponent(3, 'Student Loan', 'studentLoanYears'),
     buildPageComponent(4, 'Apartment', 'apartment'),
     buildPageComponent(5, 'Car Loan', 'carLoanYears'),
-    <Summary choices={{ ...choices }} complete={() => completePage(6)} />
+    <Summary
+      choices={{ ...choices }}
+      complete={() => completePage(6)}
+      startYear={0}
+      endYear={15}
+    />,
+    null,
+    <Summary
+      choices={{ ...choices }}
+      complete={() => completePage(8)}
+      startYear={15}
+      endYear={30}
+    />,
+    null,
+    <Summary
+      choices={{ ...choices }}
+      complete={() => completePage(8)}
+      startYear={30}
+      endYear={45}
+    />
   ]
 
   const completePage = (pageIndex, key, value) => {
