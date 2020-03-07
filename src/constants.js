@@ -1,4 +1,4 @@
-import { toCurrency } from './tools'
+import { toCurrency, getRandomCreditScore } from './tools'
 
 export const ageOffset = 20 // ex: if 20 => simulation starts at age = 21
 export const ageGroups = {
@@ -15,6 +15,7 @@ export const ageGroups = {
     end: 45
   }
 }
+export const mortgageYears = 20 // length of your mortgage contract
 
 export const cheatChoices = {
   salary: 42000,
@@ -22,7 +23,9 @@ export const cheatChoices = {
   studentLoanYears: 10,
   apartment: 1000,
   carLoanYears: 10,
-  fancyCarLoanYears: 5
+  fancyCarLoanYears: 5,
+  creditScore: getRandomCreditScore(),
+  mortgage: 100000
 }
 
 export const options = {
@@ -48,7 +51,24 @@ export const options = {
     { value: 5, label: `$13,000 (${toCurrency(13000/5)} / year for 5 years)` },
     { value: 10, label: `$24,225 (${toCurrency(24225/10)} / year for 10 years)` },
     { value: 15, label: `$33,650 (${toCurrency(33650/15)} / year for 15 years)` }
-  ]
+  ],
+  mortgage: { // mortgages are 20 years; object is broken up by quality of credit score
+    great: [
+      { value: 100000, label: `${toCurrency(100000)} home (${toCurrency(5724)} / year)`, annual: 5724 },
+      { value: 200000, label: `${toCurrency(200000)} home (${toCurrency(11460)} / year)`, annual: 11460 },
+      { value: 400000, label: `${toCurrency(400000)} home (${toCurrency(22920)} / year)`, annual: 22920 },
+    ],
+    fair: [
+      { value: 100000, label: `${toCurrency(100000)} home (${toCurrency(6444)} / year)`, annual: 6444 },
+      { value: 200000, label: `${toCurrency(200000)} home (${toCurrency(12888)} / year)`, annual: 12888 },
+      { value: 400000, label: `${toCurrency(400000)} home (${toCurrency(25764)} / year)`, annual: 25764 },
+    ],
+    poor: [
+      { value: 100000, label: `${toCurrency(100000)} home (${toCurrency(7200)} / year)`, annual: 7200 },
+      { value: 200000, label: `${toCurrency(200000)} home (${toCurrency(14388)} / year)`, annual: 14388 },
+      { value: 400000, label: `${toCurrency(400000)} home (${toCurrency(28776)} / year)`, annual: 28776 },
+    ]
+  }
 }
 
 export const getStudentLoanAnnual = years => {

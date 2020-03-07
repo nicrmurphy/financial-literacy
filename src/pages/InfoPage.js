@@ -10,6 +10,7 @@ import { Box, Typography } from '@material-ui/core'
  * @param {Object} props 
  */
 function InfoPage(props) {
+  props.complete()
   return (
     <Box>
       <Typography className="title" variant={props.titleVariant || 'h4'}>{props.title}</Typography>

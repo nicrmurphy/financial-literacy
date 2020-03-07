@@ -36,6 +36,7 @@ function RadioSelector({ name, options, selected, complete, flavorText }) {
               control={<Radio color="primary" />}
               label={option.label}
               checked={option.value === selected}
+              disabled={option.disabled}
             />
           ))}
         </RadioGroup>

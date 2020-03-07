@@ -1,5 +1,5 @@
-import { getStudentLoanAnnual, getCarLoanAnnual, getFancyCarLoanAnnual } from './constants'
-import { ageGroups } from './constants'
+import { ageGroups, mortgageYears, getStudentLoanAnnual, getCarLoanAnnual, getFancyCarLoanAnnual, options } from './constants'
+import { evaluateCreditScore } from './tools'
 
 export const presentValue = (n, years) => {
   if (!years) throw Error('Years undefined')
@@ -31,6 +31,20 @@ const getInvestmentContributions = (years, salary, contributionPercentage) => {
   return total
 }
 
+// TODO: clean up and avoid copied code; see TODO at bottom of page
+const getMortgagePayments = (years, homeValue, loanStartYear, creditScore) => {
+  if (years <= loanStartYear) return 0 // loan hasn't started yet
+  years = Math.min(years, mortgageYears + loanStartYear) // total caps when loan is complete
+  const annual = options.mortgage[evaluateCreditScore(creditScore)].find(mortgage => mortgage.value === homeValue).annual
+  return annual * (years - loanStartYear)
+}
+
+const getMortgageRemaining = (years, homeValue, loanStartYear, creditScore) => {
+  if (years <= loanStartYear) return 0 // loan hasn't started yet
+  return getMortgagePayments(mortgageYears + loanStartYear, homeValue, loanStartYear, creditScore)
+  - getMortgagePayments(years, homeValue, loanStartYear, creditScore)
+}
+
 /**
  * Returns the total loan payments made over the course of a given number of years
  * @param {Number} years how many years to calculate for
@@ -48,10 +62,10 @@ const getLoanPayments = (years, loanType, loanYears, loanStartYear) => {
       return getStudentLoanAnnual(loanYears) * (years - loanStartYear)
     case 'fancy car':
       return getFancyCarLoanAnnual(loanYears) * (years  - loanStartYear)
-    default:
-      return NaN
-  }
-}
+      default:
+        return NaN
+      }
+    }
 
 /**
  * Returns the total loan payments remaining after a given number of years
@@ -71,7 +85,8 @@ const getLoanRemaining = (years, loanType, loanYears, loanStartYear) => {
  * @param {Object} choices input data from user choices
  * @param {Number} years the number of years to calculate for
  */
-export function calcSummary({ salary, investmentPercentage, studentLoanYears, apartment, carLoanYears, fancyCarLoanYears }, years) {
+export function calcSummary({ salary, investmentPercentage, studentLoanYears, apartment,
+  carLoanYears, fancyCarLoanYears, mortgage: homeValue, creditScore }, years) {
   // console.log('calc year', years)
   const investmentContributions = getInvestmentContributions(years, salary, investmentPercentage)
   salary = raiseSalary(years, salary, .01) // after first year, raise salary by 1% annually
@@ -89,14 +104,18 @@ export function calcSummary({ salary, investmentPercentage, studentLoanYears, ap
   const carPayments =
     getLoanPayments(years, 'car', carLoanYears, ageGroups.one.start)
     + getLoanPayments(years, 'fancy car', fancyCarLoanYears, ageGroups.two.start)
+  const mortgagePayments = getMortgagePayments(years, homeValue, ageGroups.two.start, creditScore)
   const totalExpenses = 
-    studentLoanPayments + apartmentPayments + carPayments + investmentContributions
-
+  studentLoanPayments + apartmentPayments + carPayments + investmentContributions + mortgagePayments
+  
   /* calculate total debt */
   const debt =
-    getLoanRemaining(years, 'car', carLoanYears, ageGroups.one.start)
-    + getLoanRemaining(years, 'student', studentLoanYears, ageGroups.one.start)
-    + getLoanRemaining(years, 'fancy car', fancyCarLoanYears, ageGroups.two.start)
+  getLoanRemaining(years, 'car', carLoanYears, ageGroups.one.start)
+  + getLoanRemaining(years, 'student', studentLoanYears, ageGroups.one.start)
+  + getLoanRemaining(years, 'fancy car', fancyCarLoanYears, ageGroups.two.start)
+  + getMortgageRemaining(years, homeValue, ageGroups.two.start, creditScore)
+  
+
 
   // debugLoanCalculations(years, 'car', carLoanYears, ageGroups.one.start)
   // debugLoanCalculations(years, 'student', studentLoanYears, ageGroups.one.start)
@@ -114,3 +133,5 @@ export function calcSummary({ salary, investmentPercentage, studentLoanYears, ap
  * Term Life: 1324 / year
  * Full Life: 9198 / year
  */
+
+ // BIG TODO: convert all the radio buttons and options in constants.js to use index as primary key instead of value

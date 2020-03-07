@@ -6,8 +6,15 @@ import Welcome from './pages/Welcome'
 import Summary from './pages/Summary'
 import RadioSelector from './pages/RadioSelector'
 import InputSelector from './pages/InputSelector'
-import { ageGroups, options, cheatChoices } from './constants.js'
+import CreditScorePage from './pages/CreditScorePage'
+import InfoPage from './pages/InfoPage'
+import { ageGroups, options, cheatChoices, mortgageYears } from './constants.js'
 import { Prompt } from 'react-router'
+import {
+  getRandomCreditScore,
+  evaluateCreditScore,
+  getCreditQualityColor
+} from './tools'
 
 function Simulation() {
   const [page, setPage] = useState(0)
@@ -19,7 +26,9 @@ function Simulation() {
     studentLoanYears: 0,
     apartment: 0,
     carLoanYears: 0,
-    fancyCarLoanYears: 0
+    fancyCarLoanYears: 0,
+    creditScore: getRandomCreditScore(),
+    mortgage: 0
   })
 
   /**
@@ -65,27 +74,49 @@ function Simulation() {
       startYear={ageGroups.one.start}
       endYear={ageGroups.one.end}
     />,
+    <CreditScorePage
+    creditScore={choices.creditScore}
+    complete={() => completePage(7)}
+  />,
     buildPageComponent(
-      7,
+      8,
       'Fancy Car Loan',
       'fancyCarLoanYears',
       <Typography
         variant="h5"
         color="primary"
-        style={{ margin: '10px', fontWeight: 'bold' }}>
+        style={{ margin: '.5em', fontWeight: 'bold' }}>
         TIME FOR AN UPGRADE...
       </Typography>
     ),
-    <Summary
-      choices={{ ...choices }}
-      complete={() => completePage(8)}
-      startYear={ageGroups.two.start}
-      endYear={ageGroups.two.end}
+    <RadioSelector
+      name={'Mortgage'}
+      options={options.mortgage[evaluateCreditScore(choices.creditScore)]}
+      selected={choices.mortgage}
+      complete={result => completePage(9, 'mortgage', result)}
+      flavorText={
+        <Typography
+          variant="h5"
+          color="primary"
+          style={{ margin: '.5em', fontWeight: 'bold' }}>
+          DUE TO YOUR{' '}
+          <span style={{ color: getCreditQualityColor(choices.creditScore) }}>
+            {evaluateCreditScore(choices.creditScore).toUpperCase()}
+          </span>
+          {' '}CREDIT SCORE, WE CAN OFFER YOU THESE RATES ON YOUR {mortgageYears} YEAR MORTGAGE...
+        </Typography>
+      }
     />,
-    null,
     <Summary
       choices={{ ...choices }}
       complete={() => completePage(10)}
+      startYear={ageGroups.two.start}
+      endYear={ageGroups.two.end}
+    />,
+    <InfoPage title="Final Summary Next" complete={() => completePage(11)} />,
+    <Summary
+      choices={{ ...choices }}
+      complete={() => completePage(-1)}
       startYear={ageGroups.three.start}
       endYear={ageGroups.three.end}
     />
