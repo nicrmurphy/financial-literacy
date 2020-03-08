@@ -225,7 +225,7 @@ function Simulation() {
       'secondary'
     ),
     buildPageComponent(
-      14,
+      15,
       'Life Insurance',
       'lifeInsurance',
       'Would you rather...',
@@ -233,9 +233,24 @@ function Simulation() {
         variant="caption"
         color="primary"
         style={{ margin: '.5em', fontWeight: 'bold' }}>
-        I SHOULD REALLY CONSIDER SOME GETTING LIFE INSURANCE AFTER THAT...
+        I SHOULD SERIOUSLY CONSIDER SOME GETTING LIFE INSURANCE AFTER THAT...
       </Typography>
     ),
+    <RadioSelector
+      name={'Home Insurance Increase'}
+      options={options.homeInsuranceIncrease.map(option => { return { ...option, disabled: option.value !== choices.mortgage } })}
+      selected={choices.mortgage}
+      complete={() => {}}
+      prompt="Your home insurance will now be..."
+      flavorText={
+        <Typography
+          variant="h5"
+          color="primary"
+          style={{ margin: '.5em', fontWeight: 'bold' }}>
+          THAT DOESN'T SEEM FAIR
+        </Typography>
+      }
+    />,
     <Summary
       choices={{ ...choices }}
       complete={() => completePage(-1)}

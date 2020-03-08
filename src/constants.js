@@ -90,6 +90,11 @@ export const options = {
   lifeInsurance: [
     { value: 1325, label: `Term Life Insurance (${toCurrency(1325)} / year)` },
     { value: 9198, label: `Full Life Insurance (${toCurrency(9198)} / year)` }
+  ],
+  homeInsuranceIncrease: [ // annual cost is actually half as much as stated to make the formula cleaner
+    { value: 100000, label: `${toCurrency(100000)} home (${toCurrency(1200)} / year)`, annual: 600 },
+    { value: 200000, label: `${toCurrency(200000)} home (${toCurrency(2400)} / year)`, annual: 1200 },
+    { value: 400000, label: `${toCurrency(400000)} home (${toCurrency(4800)} / year)`, annual: 2400 }
   ]
 }
 

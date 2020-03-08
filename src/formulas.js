@@ -106,13 +106,15 @@ export function calcSummary({ salary, investmentPercentage, studentLoanYears, ap
     + getLoanPayments(years, 'fancy car', fancyCarLoanYears, ageGroups.two.start)
   const mortgagePayments = getMortgagePayments(years, homeValue, ageGroups.two.start, creditScore)
   const homeInsurancePayments =
-    years > ageGroups.two.start ?
+    (years > ageGroups.two.start ?
       options.homeInsurance.find(options => options.value === homeValue).annual * (years - ageGroups.two.start)
-      : 0
+      : 0) +
+    (years > ageGroups.three.start ?
+      options.homeInsuranceIncrease.find(options => options.value === homeValue).annual * (years - ageGroups.three.start)
+      : 0)
   const healthInsurancePayments = years > ageGroups.two.start ? healthInsurance * (years - ageGroups.two.start) : 0
   const midlifeCrisisPayments = years > ageGroups.three.start ? midlifeCrisis : 0 // one-time payment
   const lifeInsurancePayments = years > ageGroups.three.start ? lifeInsurance * (years - ageGroups.three.start) : 0
-  console.log(years, lifeInsurancePayments)
   const totalExpenses = 
     studentLoanPayments + apartmentPayments + carPayments + investmentContributions
     + mortgagePayments + homeInsurancePayments + healthInsurancePayments + midlifeCrisisPayments + lifeInsurancePayments
