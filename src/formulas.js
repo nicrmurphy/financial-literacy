@@ -86,7 +86,7 @@ const getLoanRemaining = (years, loanType, loanYears, loanStartYear) => {
  * @param {Number} years the number of years to calculate for
  */
 export function calcSummary({ salary, investmentPercentage, studentLoanYears, apartment,
-  carLoanYears, fancyCarLoanYears, mortgage: homeValue, creditScore }, years) {
+  carLoanYears, fancyCarLoanYears, mortgage: homeValue, creditScore, healthInsurance }, years) {
   // console.log('calc year', years)
   const investmentContributions = getInvestmentContributions(years, salary, investmentPercentage)
   salary = raiseSalary(years, salary, .01) // after first year, raise salary by 1% annually
@@ -109,8 +109,10 @@ export function calcSummary({ salary, investmentPercentage, studentLoanYears, ap
     years > ageGroups.two.start ?
       options.homeInsurance.find(options => options.value === homeValue).annual * (years - ageGroups.two.start)
       : 0
+  const healthInsurancePayments = years > ageGroups.two.start ? healthInsurance * (years - ageGroups.two.start) : 0
   const totalExpenses = 
-    studentLoanPayments + apartmentPayments + carPayments + investmentContributions + mortgagePayments + homeInsurancePayments
+    studentLoanPayments + apartmentPayments + carPayments + investmentContributions
+    + mortgagePayments + homeInsurancePayments + healthInsurancePayments
   
   /* calculate total debt */
   const debt =

@@ -28,7 +28,8 @@ function Simulation() {
     carLoanYears: 0,
     fancyCarLoanYears: 0,
     creditScore: getRandomCreditScore(),
-    mortgage: 0
+    mortgage: 0,
+    healthInsurance: 0
   })
 
   /**
@@ -147,7 +148,7 @@ function Simulation() {
       name={'Mortgage'}
       options={options.mortgage[evaluateCreditScore(choices.creditScore)]}
       selected={choices.mortgage}
-      complete={result => completePage(9, 'mortgage', result)}
+      complete={result => completePage(10, 'mortgage', result)}
       prompt="How much is your..."
       flavorText={
         <Typography
@@ -167,7 +168,7 @@ function Simulation() {
       name={'Home Insurance'}
       options={options.homeInsurance.map(option => { return { ...option, disabled: option.value !== choices.mortgage } })}
       selected={choices.mortgage}
-      complete={result => completePage(10, 'homeInsurance', result)}
+      complete={() => {}}
       prompt="Your home insurance will be..."
       flavorText={
         <Typography
@@ -178,6 +179,18 @@ function Simulation() {
         </Typography>
       }
     />,
+    buildPageComponent(
+      11,
+      'Health Insurance',
+      'healthInsurance',
+      'How much is your...',
+      <Typography
+        variant="h5"
+        color="primary"
+        style={{ margin: '.5em', fontWeight: 'bold' }}>
+        THANKS, OBAMA...
+      </Typography>
+    ),
     <Summary
       choices={{ ...choices }}
       complete={() => completePage(-1)}
@@ -264,7 +277,7 @@ function Simulation() {
                   setPage(page => page + 1)
                   setPageComplete(page < progress)
                 }}
-                onKeyPress={() => alert('test')}
+                // onKeyPress={() => alert('test')}
                 disabled={!pageComplete}>
                 Next
               </Button>

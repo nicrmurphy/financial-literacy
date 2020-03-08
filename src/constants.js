@@ -25,7 +25,8 @@ export const cheatChoices = {
   carLoanYears: 10,
   fancyCarLoanYears: 5,
   creditScore: getRandomCreditScore(),
-  mortgage: 100000
+  mortgage: 100000,
+  healthInsurance: 3600
 }
 
 export const options = {
@@ -56,23 +57,28 @@ export const options = {
     great: [
       { value: 100000, label: `${toCurrency(100000)} home (${toCurrency(5724)} / year)`, annual: 5724 },
       { value: 200000, label: `${toCurrency(200000)} home (${toCurrency(11460)} / year)`, annual: 11460 },
-      { value: 400000, label: `${toCurrency(400000)} home (${toCurrency(22920)} / year)`, annual: 22920 },
+      { value: 400000, label: `${toCurrency(400000)} home (${toCurrency(22920)} / year)`, annual: 22920 }
     ],
     fair: [
       { value: 100000, label: `${toCurrency(100000)} home (${toCurrency(6444)} / year)`, annual: 6444 },
       { value: 200000, label: `${toCurrency(200000)} home (${toCurrency(12888)} / year)`, annual: 12888 },
-      { value: 400000, label: `${toCurrency(400000)} home (${toCurrency(25764)} / year)`, annual: 25764 },
+      { value: 400000, label: `${toCurrency(400000)} home (${toCurrency(25764)} / year)`, annual: 25764 }
     ],
     poor: [
       { value: 100000, label: `${toCurrency(100000)} home (${toCurrency(7200)} / year)`, annual: 7200 },
       { value: 200000, label: `${toCurrency(200000)} home (${toCurrency(14388)} / year)`, annual: 14388 },
-      { value: 400000, label: `${toCurrency(400000)} home (${toCurrency(28776)} / year)`, annual: 28776 },
+      { value: 400000, label: `${toCurrency(400000)} home (${toCurrency(28776)} / year)`, annual: 28776 }
     ]
   },
   homeInsurance: [
     { value: 100000, label: `${toCurrency(100000)} home (${toCurrency(600)} / year)`, annual: 600 },
     { value: 200000, label: `${toCurrency(200000)} home (${toCurrency(1200)} / year)`, annual: 1200 },
-    { value: 400000, label: `${toCurrency(400000)} home (${toCurrency(2400)} / year)`, annual: 2400 },
+    { value: 400000, label: `${toCurrency(400000)} home (${toCurrency(2400)} / year)`, annual: 2400 }
+  ],
+  healthInsurance: [
+    { value: 2400, label: `${toCurrency(2400)} / year` },
+    { value: 3600, label: `${toCurrency(3600)} / year` },
+    { value: 4800, label: `${toCurrency(4800)} / year` }
   ]
 }
 
