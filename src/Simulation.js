@@ -233,7 +233,7 @@ function Simulation() {
         variant="caption"
         color="primary"
         style={{ margin: '.5em', fontWeight: 'bold' }}>
-        I SHOULD SERIOUSLY CONSIDER SOME GETTING LIFE INSURANCE AFTER THAT...
+        I SHOULD SERIOUSLY CONSIDER GETTING LIFE INSURANCE AFTER THAT...
       </Typography>
     ),
     <RadioSelector
@@ -247,7 +247,7 @@ function Simulation() {
           variant="h5"
           color="primary"
           style={{ margin: '.5em', fontWeight: 'bold' }}>
-          THAT DOESN'T SEEM FAIR
+          WAIT THAT DOESN'T SEEM FAIR
         </Typography>
       }
     />,
