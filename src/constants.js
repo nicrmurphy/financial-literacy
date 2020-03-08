@@ -68,7 +68,12 @@ export const options = {
       { value: 200000, label: `${toCurrency(200000)} home (${toCurrency(14388)} / year)`, annual: 14388 },
       { value: 400000, label: `${toCurrency(400000)} home (${toCurrency(28776)} / year)`, annual: 28776 },
     ]
-  }
+  },
+  homeInsurance: [
+    { value: 100000, label: `${toCurrency(100000)} home (${toCurrency(600)} / year)`, annual: 600 },
+    { value: 200000, label: `${toCurrency(200000)} home (${toCurrency(1200)} / year)`, annual: 1200 },
+    { value: 400000, label: `${toCurrency(400000)} home (${toCurrency(2400)} / year)`, annual: 2400 },
+  ]
 }
 
 export const getStudentLoanAnnual = years => {

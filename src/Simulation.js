@@ -163,9 +163,24 @@ function Simulation() {
         </Typography>
       }
     />,
+    <RadioSelector
+      name={'Home Insurance'}
+      options={options.homeInsurance.map(option => { return { ...option, disabled: option.value !== choices.mortgage } })}
+      selected={choices.mortgage}
+      complete={result => completePage(10, 'homeInsurance', result)}
+      prompt="Your home insurance will be..."
+      flavorText={
+        <Typography
+          variant="h5"
+          color="primary"
+          style={{ margin: '.5em', fontWeight: 'bold' }}>
+          I NEED TO BUY A HOUSE <i>AND</i> INSURE IT?
+        </Typography>
+      }
+    />,
     <Summary
       choices={{ ...choices }}
-      complete={() => completePage(10)}
+      complete={() => completePage(-1)}
       startYear={ageGroups.two.start}
       endYear={ageGroups.two.end}
     />,

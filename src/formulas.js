@@ -105,8 +105,12 @@ export function calcSummary({ salary, investmentPercentage, studentLoanYears, ap
     getLoanPayments(years, 'car', carLoanYears, ageGroups.one.start)
     + getLoanPayments(years, 'fancy car', fancyCarLoanYears, ageGroups.two.start)
   const mortgagePayments = getMortgagePayments(years, homeValue, ageGroups.two.start, creditScore)
+  const homeInsurancePayments =
+    years > ageGroups.two.start ?
+      options.homeInsurance.find(options => options.value === homeValue).annual * (years - ageGroups.two.start)
+      : 0
   const totalExpenses = 
-  studentLoanPayments + apartmentPayments + carPayments + investmentContributions + mortgagePayments
+    studentLoanPayments + apartmentPayments + carPayments + investmentContributions + mortgagePayments + homeInsurancePayments
   
   /* calculate total debt */
   const debt =
