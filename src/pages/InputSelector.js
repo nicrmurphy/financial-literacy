@@ -7,7 +7,7 @@ import {
 } from '@material-ui/core'
 import { toCurrency } from '../tools'
 
-function InputSelector({ name, salary, selected, complete, incomplete }) {
+function InputSelector({ name, salary, selected, complete, incomplete, flavorText }) {
   const [value, setValue] = useState(selected)
 
   const handleChange = e => {
@@ -23,6 +23,7 @@ function InputSelector({ name, salary, selected, complete, incomplete }) {
 
   return (
     <Fragment>
+      {flavorText}
       <Typography variant="h5" style={{ padding: '10px' }}>
         What percentage of your annual salary ({toCurrency(salary)}) do you want to contribute to your 401(k)?
       </Typography>

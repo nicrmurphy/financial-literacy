@@ -8,7 +8,7 @@ import {
   Typography
 } from '@material-ui/core'
 
-function RadioSelector({ name, options, selected, complete, flavorText }) {
+function RadioSelector({ name, options, selected, complete, prompt, flavorText }) {
   const [value, setValue] = useState(selected)
 
   const handleChange = e => {
@@ -20,7 +20,7 @@ function RadioSelector({ name, options, selected, complete, flavorText }) {
     <Fragment>
       {flavorText}
       <Typography variant="h5" style={{ padding: '10px' }}>
-        What is your...
+        {prompt}
       </Typography>
       <FormControl component="fieldset" width="500px">
         <FormLabel component="legend">{name}</FormLabel>

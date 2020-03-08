@@ -18,10 +18,10 @@ import {
 
 function Simulation() {
   const [page, setPage] = useState(0)
-  const [pageComplete, setPageComplete] = useState(false)
+  const [pageComplete, setPageComplete] = useState(true)
   const [progress, setProgress] = useState(page) // furthest completed page
   const [choices, setChoices] = useState({
-    salary: 0,
+    salary: 42000,
     investmentPercentage: '',
     studentLoanYears: 0,
     apartment: 0,
@@ -37,19 +37,31 @@ function Simulation() {
    * @param {String} label
    * @param {String} key
    */
-  const buildPageComponent = (pageIndex, label, key, flavorText) => (
+  const buildPageComponent = (pageIndex, label, key, prompt, flavorText) => (
     <RadioSelector
       name={label}
       options={options[key]}
       selected={choices[key]}
       complete={result => completePage(pageIndex, key, result)}
+      prompt={prompt}
       flavorText={flavorText}
     />
   )
 
   const pages = [
     <Welcome nextPage={() => setPage(page + 1)} />,
-    buildPageComponent(1, 'Salary', 'salary'),
+    buildPageComponent(
+      1,
+      'Salary',
+      'salary',
+      'Congrats, you got a job!',
+      <Typography
+        variant="h5"
+        color="primary"
+        style={{ margin: '.5em', fontWeight: 'bold' }}>
+        A JOB WELL DONE
+      </Typography>
+    ),
     <InputSelector
       name={'Amount'}
       salary={choices.salary}
@@ -64,10 +76,51 @@ function Simulation() {
         setPageComplete(false)
         setChoices({ ...choices, investmentPercentage: 0 })
       }}
+      flavorText={
+        <Typography
+          variant="h5"
+          color="primary"
+          style={{ margin: '.5em', fontWeight: 'bold' }}>
+          SAVE IT FOR A RAINY DAY
+        </Typography>
+      }
     />,
-    buildPageComponent(3, 'Student Loan', 'studentLoanYears'),
-    buildPageComponent(4, 'Apartment', 'apartment'),
-    buildPageComponent(5, 'Car Loan', 'carLoanYears'),
+    buildPageComponent(
+      3,
+      'Student Loan',
+      'studentLoanYears',
+      'How much is your...',
+      <Typography
+        variant="h5"
+        color="primary"
+        style={{ margin: '.5em', fontWeight: 'bold' }}>
+        AREN'T I SUPPOSED TO BE <i>MAKING</i> MONEY?
+      </Typography>
+    ),
+    buildPageComponent(
+      4,
+      'Apartment',
+      'apartment',
+      'How much is your...',
+      <Typography
+        variant="h5"
+        color="primary"
+        style={{ margin: '.5em', fontWeight: 'bold' }}>
+        HOME SWEET HOME
+      </Typography>
+    ),
+    buildPageComponent(
+      5,
+      'Car Loan',
+      'carLoanYears',
+      'How much is your...',
+      <Typography
+        variant="h5"
+        color="primary"
+        style={{ margin: '.5em', fontWeight: 'bold' }}>
+        LIFE IS A HIGHWAY
+      </Typography>
+    ),
     <Summary
       choices={{ ...choices }}
       complete={() => completePage(6)}
@@ -75,18 +128,19 @@ function Simulation() {
       endYear={ageGroups.one.end}
     />,
     <CreditScorePage
-    creditScore={choices.creditScore}
-    complete={() => completePage(7)}
-  />,
+      creditScore={choices.creditScore}
+      complete={() => completePage(7)}
+    />,
     buildPageComponent(
       8,
       'Fancy Car Loan',
       'fancyCarLoanYears',
+      'How much is your...',
       <Typography
         variant="h5"
         color="primary"
         style={{ margin: '.5em', fontWeight: 'bold' }}>
-        TIME FOR AN UPGRADE...
+        TIME FOR AN UPGRADE
       </Typography>
     ),
     <RadioSelector
@@ -94,6 +148,7 @@ function Simulation() {
       options={options.mortgage[evaluateCreditScore(choices.creditScore)]}
       selected={choices.mortgage}
       complete={result => completePage(9, 'mortgage', result)}
+      prompt="How much is your..."
       flavorText={
         <Typography
           variant="h5"
@@ -102,8 +157,9 @@ function Simulation() {
           DUE TO YOUR{' '}
           <span style={{ color: getCreditQualityColor(choices.creditScore) }}>
             {evaluateCreditScore(choices.creditScore).toUpperCase()}
-          </span>
-          {' '}CREDIT SCORE, WE CAN OFFER YOU THESE RATES ON YOUR {mortgageYears} YEAR MORTGAGE...
+          </span>{' '}
+          CREDIT SCORE, WE CAN OFFER YOU THESE RATES ON YOUR {mortgageYears}{' '}
+          YEAR MORTGAGE...
         </Typography>
       }
     />,
