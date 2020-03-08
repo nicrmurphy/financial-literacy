@@ -26,7 +26,9 @@ export const cheatChoices = {
   fancyCarLoanYears: 5,
   creditScore: getRandomCreditScore(),
   mortgage: 100000,
-  healthInsurance: 3600
+  healthInsurance: 3600,
+  midlifeCrisis: 100000,
+  lifeInsurance: 1325
 }
 
 export const options = {
@@ -79,6 +81,15 @@ export const options = {
     { value: 2400, label: `${toCurrency(2400)} / year` },
     { value: 3600, label: `${toCurrency(3600)} / year` },
     { value: 4800, label: `${toCurrency(4800)} / year` }
+  ],
+  midlifeCrisis: [
+    { value: 155000, label: `${toCurrency(155000)} Airplane (Aero Commander 500)` },
+    { value: 100000, label: `${toCurrency(100000)} 35' Yacht` },
+    { value: 75000, label: `${toCurrency(75000)} Sports Car` }
+  ],
+  lifeInsurance: [
+    { value: 1325, label: `Term Life Insurance (${toCurrency(1325)} / year)` },
+    { value: 9198, label: `Full Life Insurance (${toCurrency(9198)} / year)` }
   ]
 }
 

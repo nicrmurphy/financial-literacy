@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, Fragment } from 'react'
 import './App.css'
 import { Container, Button, Grid, Typography } from '@material-ui/core'
 import Footer from './Footer'
@@ -7,7 +7,6 @@ import Summary from './pages/Summary'
 import RadioSelector from './pages/RadioSelector'
 import InputSelector from './pages/InputSelector'
 import CreditScorePage from './pages/CreditScorePage'
-import InfoPage from './pages/InfoPage'
 import { ageGroups, options, cheatChoices, mortgageYears } from './constants.js'
 import { Prompt } from 'react-router'
 import {
@@ -15,6 +14,8 @@ import {
   evaluateCreditScore,
   getCreditQualityColor
 } from './tools'
+import 'csshake/dist/csshake.min.css'
+
 
 function Simulation() {
   const [page, setPage] = useState(0)
@@ -29,7 +30,9 @@ function Simulation() {
     fancyCarLoanYears: 0,
     creditScore: getRandomCreditScore(),
     mortgage: 0,
-    healthInsurance: 0
+    healthInsurance: 0,
+    midlifeCrisis: 0,
+    lifeInsurance: 0
   })
 
   /**
@@ -38,7 +41,7 @@ function Simulation() {
    * @param {String} label
    * @param {String} key
    */
-  const buildPageComponent = (pageIndex, label, key, prompt, flavorText) => (
+  const buildPageComponent = (pageIndex, label, key, prompt, flavorText, color) => (
     <RadioSelector
       name={label}
       options={options[key]}
@@ -46,6 +49,7 @@ function Simulation() {
       complete={result => completePage(pageIndex, key, result)}
       prompt={prompt}
       flavorText={flavorText}
+      color={color ? color : 'primary'}
     />
   )
 
@@ -193,11 +197,45 @@ function Simulation() {
     ),
     <Summary
       choices={{ ...choices }}
-      complete={() => completePage(-1)}
+      complete={() => completePage(12)}
       startYear={ageGroups.two.start}
       endYear={ageGroups.two.end}
     />,
-    <InfoPage title="Final Summary Next" complete={() => completePage(11)} />,
+    buildPageComponent(
+      13,
+      'Midlife Crisis',
+      'midlifeCrisis',
+      '',
+      <Fragment>
+        <Typography
+          className="shake shake-little shake-constant"
+          variant="h4"
+          color="secondary"
+          style={{ margin: '.5em', fontWeight: 'bold' }}>
+          UH OH, MIDLIFE CRISIS!
+        </Typography>
+        <Typography
+          className="shake shake-constant"
+          variant="h6"
+          color="secondary"
+          style={{ margin: '.5em', fontWeight: 'bold' }}>
+          TIME IS RUNNING OUT WAIT MONEY CAN BUY HAPPINESS RIGHT OH GOD
+        </Typography>
+      </Fragment>,
+      'secondary'
+    ),
+    buildPageComponent(
+      14,
+      'Life Insurance',
+      'lifeInsurance',
+      'Would you rather...',
+      <Typography
+        variant="caption"
+        color="primary"
+        style={{ margin: '.5em', fontWeight: 'bold' }}>
+        I SHOULD REALLY CONSIDER SOME GETTING LIFE INSURANCE AFTER THAT...
+      </Typography>
+    ),
     <Summary
       choices={{ ...choices }}
       complete={() => completePage(-1)}

@@ -8,9 +8,8 @@ import {
   Typography
 } from '@material-ui/core'
 
-function RadioSelector({ name, options, selected, complete, prompt, flavorText }) {
+function RadioSelector({ name, options, selected, complete, prompt, flavorText, color }) {
   const [value, setValue] = useState(selected)
-
   const handleChange = e => {
     setValue(parseInt(e.target.value))
     complete(parseInt(e.target.value))
@@ -23,7 +22,7 @@ function RadioSelector({ name, options, selected, complete, prompt, flavorText }
         {prompt}
       </Typography>
       <FormControl component="fieldset" width="500px">
-        <FormLabel component="legend">{name}</FormLabel>
+        <FormLabel component="legend" color={color ? color : 'primary'}>{name}</FormLabel>
         <RadioGroup
           aria-label={name}
           name={name}
@@ -33,7 +32,7 @@ function RadioSelector({ name, options, selected, complete, prompt, flavorText }
             <FormControlLabel
               key={index}
               value={option.value}
-              control={<Radio color="primary" />}
+              control={<Radio color={color ? color : 'primary'} />}
               label={option.label}
               checked={option.value === selected}
               disabled={option.disabled}
