@@ -29,7 +29,7 @@ function Welcome(props) {
         decisions an individual will make, this app is a tool used in a
         financial literacy curriculum. For comments or inquiries, please contact{' '}
         {blusGoldLink}.{<br />}<br />The source code for this app can be found{' '}
-        {sourceCodeLink}.{<br />}Last update <ProjectTimestamp />.
+        {sourceCodeLink}.{<br />}Last updated <ProjectTimestamp />.
       </p>
       <br />
       <img id="blusgold-logo" src={logo} alt="Blu$ Gold logo"/>
