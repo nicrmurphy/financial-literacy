@@ -6,7 +6,7 @@ This project is a mobile-first React web application aimed at simulating importa
 
 ## Built Using
 
-* [React](https://github.com/facebook/react) - The web framework used
+* [React](https://github.com/facebook/react) - Web Framework
 * [react-chartjs-2](https://github.com/jerairrest/react-chartjs-2) - Data Visualization
 * [CSShake](https://github.com/elrumordelaluz/csshake) - Text Animation
 
