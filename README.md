@@ -2,7 +2,7 @@
 
 # The Game of Life - Financial Simulation
 
-This project is a React web application aimed at simulating important financial decisions over the course of an individual's life.  Commissioned and designed by [Blu's Gold](https://blusgold.com/).
+This project is a mobile-first React web application aimed at simulating important financial decisions over the course of an individual's life.  Commissioned and designed by [Blu's Gold](https://blusgold.com/).
 
 ## Built Using
 
