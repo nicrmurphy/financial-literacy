@@ -1,6 +1,6 @@
 import React, { useState, Fragment } from 'react'
 import './App.css'
-import { Container, Button, Grid, Typography } from '@material-ui/core'
+import { Container, Button, Grid, Typography, Link } from '@material-ui/core'
 import Footer from './Footer'
 import Welcome from './pages/Welcome'
 import Summary from './pages/Summary'
@@ -15,6 +15,7 @@ import {
   getCreditQualityColor
 } from './tools'
 import 'csshake/dist/csshake.min.css'
+import logo from './logo.png'
 
 
 function Simulation() {
@@ -256,7 +257,22 @@ function Simulation() {
       complete={() => completePage(-1)}
       startYear={ageGroups.three.start}
       endYear={ageGroups.three.end}
-    />
+    />,
+    <Typography
+    variant="h5"
+    color="primary"
+    style={{ margin: '.5em', fontWeight: 'bold', marginTop: '2em' }}>
+    *TIME TO RETIRE* 
+    {<Fragment><br/><br/></Fragment>}
+    <span style={{ color: '#ffc107' }}>THANK YOU FOR PLAYING!</span>
+    {<Fragment><br/><br/></Fragment>}
+    <Link href="/">TRY AGAIN?</Link>
+    {<Fragment><br/><br/><br/></Fragment>}
+    <Link href="https://blusgold.com/" target="_blank" rel="noopener noreferrer">
+      <img id="blusgold-logo" src={logo} alt="Blu$ Gold logo"/>
+    </Link>
+
+  </Typography>
   ]
 
   const completePage = (pageIndex, key, value) => {

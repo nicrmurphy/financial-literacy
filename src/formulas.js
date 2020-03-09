@@ -93,7 +93,7 @@ export function calcSummary({ salary, investmentPercentage, studentLoanYears, ap
   
   /* calculate net income */
   const taxRate = 0.75 // income tax, property tax, etc
-  const miscCostRate = 0.5 // miscellaneous costs and purchases
+  const miscCostRate = 0.6 // miscellaneous costs and purchases
   const netIncome = salary * taxRate * miscCostRate * years
 
   /* calculate total expenses */
@@ -139,10 +139,5 @@ export function calcSummary({ salary, investmentPercentage, studentLoanYears, ap
     investments: presentValue(investments, years)
   }
 }
-
-/**
- * Term Life: 1324 / year
- * Full Life: 9198 / year
- */
 
  // BIG TODO: convert all the radio buttons and options in constants.js to use index as primary key instead of value

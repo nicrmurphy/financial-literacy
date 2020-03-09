@@ -50,6 +50,7 @@ h2.header-text {
   margin: auto;
   margin-top: 1vh;
   margin-bottom: 1vh;
+  font-size: .75em;
 }
 
 #summary-text-wrapper {

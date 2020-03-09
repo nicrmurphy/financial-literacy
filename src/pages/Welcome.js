@@ -1,11 +1,14 @@
-import React, {  } from 'react'
+import React from 'react'
 import { Box, Button, Link } from '@material-ui/core'
 import ProjectTimestamp from '../ProjectTimestamp'
 import logo from '../logo.png'
 
 function Welcome(props) {
   const blusGoldLink = (
-    <Link href="https://blusgold.com/" target="_blank" rel="noopener noreferrer">
+    <Link
+      href="https://blusgold.com/"
+      target="_blank"
+      rel="noopener noreferrer">
       Blu'$ Gold
     </Link>
   )
@@ -22,12 +25,14 @@ function Welcome(props) {
   return (
     <Box>
       <p id="welcome-text">
-        Welcome to the simulation! This app is in active development. For
-        comments or inquiries, please contact {blusGoldLink}. The source code
-        for this app can be found {sourceCodeLink}. Most recent update was{' '}
-        <ProjectTimestamp />.
+        Welcome! Aiming to simulate some of the most important financial
+        decisions an individual will make, this app is a tool used in a
+        financial literacy curriculum. For comments or inquiries, please contact{' '}
+        {blusGoldLink}.{<br />}<br />The source code for this app can be found{' '}
+        {sourceCodeLink}.{<br />}Last update <ProjectTimestamp />.
       </p>
-      <img id="blusgold-logo" src={logo} alt="Blu$ Gold logo"></img>
+      <br />
+      <img id="blusgold-logo" src={logo} alt="Blu$ Gold logo"/>
       <br />
       <Button
         variant="contained"
